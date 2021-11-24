@@ -11,6 +11,7 @@
 
 Pelin tavoitteena on, että pelaaja liikkuu ympäri Otaniemeä, suorittamassa koulupäivän onnistumiseksi vaadittavat tehtävät, jotka löytyvät pelaajan to-do -listasta.
 Kaikilla alueilla ei ole mahdollisuutta suorittaa samoja tehtäviä, vaan pelaajan tulee liikkua pelin eri alueilla etsimässä mahdollisia paikkoja suorittaa tehtävä.
+Jokainen siirtymä sekä tehtävän tekeminen kuluttaa kelloa. Pelaajan tulee pitää huoli, että hän saa päivän hommat suortettu kahdeksassa (8) tunnissa, muuten koulun tilat sulkeutuvat.
 Kun pelaaja on tehnyt to-do -listassa vaaditun tehtävän, se merkitään hänen listaansa tehdyksi.
 Pelaaja läpäisee pelin, kun to-do -listasta kaikki vaaditut tehtävät ovat tehty.
 
