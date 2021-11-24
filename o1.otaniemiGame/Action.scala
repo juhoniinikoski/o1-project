@@ -16,16 +16,16 @@ class Action(input: String) {
     * that the command was understood. Returns a description of what happened as a result
     * of the action (such as "You go west."). The description is returned in an `Option`
     * wrapper; if the command was not recognized, `None` is returned. */
-  def execute(actor: Player): Option[String] = this.verb match {
+  def execute(actor: Player): Option[(Int, String)] = this.verb match {
     case "suuntana"    => Some(actor.go(this.modifiers))
-    case "rest"  => Some(actor.rest())
-    case "xyzzy" => Some("The grue tastes yummy.")
-    case "quit"  => Some(actor.quit())
-    case "inventory" => Some(actor.inventory)
-    case "tee" => Some(actor.doTask(this.modifiers))
-    case "drop" => Some(actor.drop(this.modifiers))
-    case "examine" => Some(actor.examine(this.modifiers))
-    case other   => None
+//    case "rest"        => Some(actor.rest())
+//    case "xyzzy"       => Some("The grue tastes yummy.")
+//    case "quit"        => Some(actor.quit())
+//    case "inventory"   => Some(actor.inventory)
+//    case "tee"         => Some(actor.doTask(this.modifiers))
+//    case "drop"        => Some(actor.drop(this.modifiers))
+//    case "examine"     => Some(actor.examine(this.modifiers))
+    case other         => None
   }
 
 

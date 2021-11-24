@@ -59,10 +59,10 @@ class Game {
   /** The character that the player controls in the game. */
   val player = new Player(aukio)
 
-  /** The number of turns that have passed since the start of the game. */
-  var turnCount = 0
-  /** The maximum number of turns that this adventure game allows before time runs out. */
-  val timeLimit = 40
+  /** The number of minutes that have passed since the start of the game. */
+  var minuteCount: Int = 0
+  /** The maximum number of hours that this game allows before time runs out. */
+  val minuteLimit: Int = 8 * 60
 
 
   /** Determines if the adventure is complete, that is, if the player has won. */
@@ -72,7 +72,7 @@ class Game {
   }
 
   /** Determines whether the player has won, lost, or quit, thereby ending the game. */
-  def isOver: Boolean = this.isComplete || this.player.hasQuit || this.turnCount == this.timeLimit
+  def isOver: Boolean = this.isComplete || this.player.hasQuit || this.minuteCount >= this.minuteLimit
 
   private val toDo = Map[String, String](
     "lecture" -> "Käy luennolla",
@@ -83,7 +83,7 @@ class Game {
 
   /** Returns a message that is to be displayed to the player at the beginning of the game. */
   def welcomeMessage: String = {
-    var string = "Huh, taas uusi koulupäivä koittaa.\n\nTee vähintään kolme tehtävää päivän to-do listasta, niin voit iloisin mielin lopettaa päivän. \n\nTo do:"
+    var string = "\nHuh, taas uusi koulupäivä koittaa.\nTee vähintään kolme tehtävää päivän to-do listasta, niin voit iloisin mielin illalla lopettaa päivän. \n\nTo do:"
     string = string + this.handlePrint
     string
   }
@@ -92,9 +92,9 @@ class Game {
     var string = ""
     this.toDo.values.foreach(v =>
       if (this.player.hasDone(v)) {
-        string = string + s"\n[x] ${v}"
+        string = string + s"\n[x] $v"
       } else {
-        string = string + s"\n[ ] ${v}"
+        string = string + s"\n[ ] $v"
       }
     )
     string
@@ -105,11 +105,11 @@ class Game {
     * will be different depending on whether or not the player has completed their quest. */
   def goodbyeMessage: String = {
     if (this.isComplete)
-      "Home at last... and phew, just in time! Well done!"
-    else if (this.turnCount == this.timeLimit)
-      "Oh no! Time's up. Starved of entertainment, you collapse and weep like a child.\nGame over!"
+      "Olipahan koulupäivä, mutta hommat on nyt hoidettu! Nyt ei auta kun löhöillä sohvalla."
+    else if (this.minuteCount >= this.minuteLimit)
+      "Voi ei, kello on niin paljon, että koulun tilat sulkeutuvat jo.\nHuomiselle jää todella paljon hommaa, harmin paikka!"
     else  // game over due to player quitting
-      "Quitter!"
+      "Luovuttajat eivät pärjää elämässä!"
   }
 
 
@@ -119,10 +119,12 @@ class Game {
   def playTurn(command: String): String = {
     val action = new Action(command)
     val outcomeReport = action.execute(this.player)
-    if (outcomeReport.isDefined) {
-      this.turnCount += 1
+    val description = outcomeReport.map(_._2)
+    val time = outcomeReport.map(_._1).getOrElse(0)
+    if (description.isDefined) {
+      this.minuteCount += time
     }
-    outcomeReport.getOrElse("Unknown command: \"" + command + "\".")
+    description.getOrElse("Tuntematon komento: \"" + command + "\".")
   }
 
 

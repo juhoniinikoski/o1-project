@@ -71,10 +71,17 @@ class Player(startingArea: Area) {
   /** Attempts to move the player in the given direction. This is successful if there
     * is an exit from the player's current location towards the direction name. Returns
     * a description of the result: "You go DIRECTION." or "You can't go DIRECTION." */
-  def go(direction: String): String = {
+  def go(direction: String): (Int, String) = {
     val destination = this.location.neighbor(direction)
     this.currentLocation = destination.getOrElse(this.currentLocation)
-    if (destination.isDefined) "Kävelit suuntaan " + direction + "." else "Et voi liikkua suuntaan " + direction + "."
+    var string = "Et voi liikkua suuntaan " + direction + "."
+    if (destination.isDefined) {
+      string = "Kävelit suuntaan " + direction + ". Aikaa kului " + 5 + " minuuttia."
+      // walking time taken from constants
+      walkingTime -> string
+    } else {
+      0 -> string
+    }
   }
 
 
