@@ -4,14 +4,14 @@ package o1.otaniemiGame
 class Game {
 
   /** The title of the adventure game. */
-  val title = "A Forest Adventure"
+  val title = "Koulupäivä Otaniemessä"
 
   private val metro      = new Area("Metro", "Olet metroasemalla.\nMetrot metelöivät ja ihmisiä vilisee.")
-  private val aBloc      = new Area("aBlock", "Olet A Bloc ostoskeskuksessa.\nRuoka ja kahvi tuoksuu, nam.")
+  private val aBloc      = new Area("A Bloc", "Olet A Bloc ostoskeskuksessa.\nRuoka ja kahvi tuoksuu, nam.")
   private val dipoli     = new Area("Dipoli", "Olet Aalto-yliopiston päärakennuksessa Dipolissa.\nTäällä ei yksikään ikkuna ole toistensa kanssa samankokoinen.")
   private val kirjasto   = new Area("Kirjasto", "Olet kirjastossa, toiselta nimeltään Harald Herlin oppimiskeskuksessa.\nHiljainen on tunnelma ja ihmiset ovat keskittyneitä.")
   private val alvari     = new Area("Alvarin aukio", "Olet Alvarin aukiolla. Kannattaa katsoa mihin astuu, sillä hanhet ovat olleet asialla jälleen.")
-  private val tTalo      = new Area("T-Talo", "T-Talo, täällä opiskellaan, syödään ja hengaillaan.\nKäy kurkkaamassa Student HUB!")
+  private val tTalo      = new Area("T-Talo", "T-Talo, täällä opiskellaan, syödään ja hengaillaan.\nTiesitkö, että toisessa kerroksessa on pienimuotoinen tietokonemuseo?")
   private val tuas       = new Area("TUAS", "Olet TUASilla. Täällä kädet käy ja juttu lentää.\nTäällä on yksi kylän parhaista opikelijaravintoloista!")
   private val taffa      = new Area("Täffä", "Olispa keskiviikko.\nSpagua odotellessa!")
   private val aukio      = new Area("Aukio", "Olet aukiolla metroaseman ja Väreen edustalla.\nHuomaat kuinka jokainen ohikulkija tuijottaa puhelintaan.")
@@ -25,27 +25,32 @@ class Game {
   tTalo.setNeighbors(Vector("itä" -> tuas, "länsi" -> aukio))
   tuas.setNeighbors(Vector("länsi" -> tTalo))
   taffa.setNeighbors(Vector("pohjoinen" -> dipoli, "itä" -> alvari))
-  alvari.setNeighbors(Vector("pohjoinen" -> kirjasto, "itä" -> tTalo, "east" -> kandilafka, "west" -> taffa))
-  kandilafka.setNeighbors(Vector("north" -> aukio, "west" -> alvari))
+  alvari.setNeighbors(Vector("pohjoinen" -> kirjasto, "itä" -> kandilafka, "länsi" -> taffa))
+  kandilafka.setNeighbors(Vector("pohjoinen" -> aukio, "länsi" -> alvari))
 
-  private val seat = new Item("seat", "Istuudu alas opiskelemaan. Laskareissa on tekemistä!")
-  private val lunch = new Item("lunch", "Käy haukkaamassa ravitseva opiskelijalounas.")
-  private val lecture = new Item("lecture", "Käy kuuntelemassa päivän polttava luento!")
+  private val seat = new Item("seat", "Istuutua alas opiskelemaan. Laskareissa on tekemistä!")
+  private val lunch = new Item("lunch", "Käydä haukkaamassa ravitsevan opiskelijalounaan.")
+  private val lecture = new Item("lecture", "Käydä kuuntelemassa päivän polttavan luennon!")
+  private val friends = new Item("friends", "Vaihtaa kavereiden kanssa kuulumisia.")
 
   aBloc.addItem(lunch)
-  aBloc.addItem(new Item("coffee", "Ärrältä saa kahvin suhteellisen edullisesti!"))
-  dipoli.addItem(new Item("flyer", "Ota mukaan esite koskien Aallon rekrymessuja, jotka järjestetään Otahallissa!"))
+  aBloc.addItem(new Item("coffee", "Ottaa ärrältä kahvin suhteellisen edullisesti mukaan!"))
+  dipoli.addItem(new Item("flyer", "Otta mukaan esite koskien Aallon rekrymessuja, jotka järjestetään Otahallissa!"))
   dipoli.addItem(lunch)
-  kirjasto.addItem(new Item("book", "Lainaa fysiikan kirja jo ajoissa, tarvitset sitä tenttiviikkoa ajatellen."))
+  kirjasto.addItem(new Item("book", "Lainata fysiikan kirjan jo ajoissa, tarvitset sitä tenttiviikkoa ajatellen."))
   kirjasto.addItem(seat)
   tTalo.addItem(lecture)
   tTalo.addItem(seat)
   tTalo.addItem(lunch)
+  tTalo.addItem(friends)
   tuas.addItem(seat)
   tuas.addItem(lunch)
   tuas.addItem(lecture)
+  tuas.addItem(friends)
   taffa.addItem(lunch)
+  taffa.addItem(friends)
   kandilafka.addItem(seat)
+  kandilafka.addItem(friends)
   kandilafka.addItem(lunch)
   kandilafka.addItem(lecture)
 

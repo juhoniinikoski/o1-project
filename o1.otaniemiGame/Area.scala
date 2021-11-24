@@ -12,22 +12,22 @@ import scala.collection.mutable.Map
 class Area(var name: String, var description: String) {
 
   private val neighbors = Map[String, Area]()
-  private val items = Map[String, Item]()
+  private val activities = Map[String, Item]()
 
   def contains(itemName: String): Boolean = {
-    this.items.contains(itemName)
+    this.activities.contains(itemName)
   }
 
-  def addItem(item: Item): Unit = {
-    items += item.name -> item
+  def addItem(activity: Item): Unit = {
+    activities += activity.name -> activity
   }
 
   def removeItem(itemName: String): Option[Item] = {
-    val item = this.items.get(itemName)
-    if (item.isDefined) {
-      this.items -= itemName
+    val activity = this.activities.get(itemName)
+    if (activity.isDefined) {
+      this.activities -= itemName
     }
-    item
+    activity
   }
 
   /** Returns the area that can be reached from this area by moving in the given direction. The result
@@ -56,10 +56,16 @@ class Area(var name: String, var description: String) {
     * value has the form "DESCRIPTION\n\nExits available: DIRECTIONS SEPARATED BY SPACES".
     * The directions are listed in an arbitrary order. */
   def fullDescription: String = {
-    val exitList = "\n\nExits available: " + this.neighbors.keys.mkString(" ")
+    val exitList = "\n\nSuunnat, joihin voit kulkea: " + this.neighbors.keys.mkString(" ")
     var string = this.description
-    if (this.items.nonEmpty) {
-      val itemList = "\nYou see here: " + this.items.keys.mkString(" ")
+    if (this.activities.nonEmpty) {
+      var itemList = "\n\nTäällä voit: "
+      val descriptions = this.activities.values.map(_.description)
+      var i = 1
+      for (description <- descriptions) {
+        itemList += s"\n${i}. ${description}"
+        i += 1
+      }
       string = string + itemList
     }
     string + exitList

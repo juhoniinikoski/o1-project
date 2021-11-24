@@ -35,7 +35,7 @@ object OtaniemiGameTextUI extends App {
   /** Requests a command from the player, plays a game turn accordingly, and prints out a report of what happened.  */
   private def playTurn() = {
     println()
-    val command = readLine("Command: ")
+    val command = readLine("Komento: ")
     val turnReport = this.game.playTurn(command)
     if (!turnReport.isEmpty) {
       println(turnReport)

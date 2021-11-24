@@ -14,7 +14,7 @@ class Player(startingArea: Area) {
   private var quitCommandGiven = false              // one-way flag
   private val items = Map[String, Item]()
 
-  def get(itemName: String): String = {
+  def doTask(itemName: String): String = {
     val item = this.currentLocation.removeItem(itemName)
     var string = s"There is no $itemName here to pick up."
     if (item.isDefined) {
@@ -35,9 +35,10 @@ class Player(startingArea: Area) {
     string
   }
 
+  // voi tarkastella päivän to-do listaa tämän avulla
   def examine(itemName: String): String = {
     val item = this.items.get(itemName)
-    var string = "If you want to examine something, you need to pick it up first."
+    var string = "Jos haluat tarkastella päivän to-do -listaa"
     if (item.isDefined) {
       val description = item.map(_.description).getOrElse("")
       string = s"You look closely at the $itemName.\n$description"
@@ -73,7 +74,7 @@ class Player(startingArea: Area) {
   def go(direction: String): String = {
     val destination = this.location.neighbor(direction)
     this.currentLocation = destination.getOrElse(this.currentLocation)
-    if (destination.isDefined) "You go " + direction + "." else "You can't go " + direction + "."
+    if (destination.isDefined) "Kävelit suuntaan " + direction + "." else "Et voi liikkua suuntaan " + direction + "."
   }
 
 
