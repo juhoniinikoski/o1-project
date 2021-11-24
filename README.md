@@ -17,8 +17,8 @@ Pelaaja läpäisee pelin, kun to-do -listasta kaikki vaaditut tehtävät ovat te
 
 # Pelin ominaisuudet
 
-* Pelaaaja voi liikkua ympäri Otaniemeä komennolla ´suuntana <ilmansuunta>´
-* Pelaaja voi suorittaa tehtäviä kyseisen alueen tehtävä listasta. Tehtävä suoritetaan komennolla ´suorita <tehtävänumero>´
+* Pelaaaja voi liikkua ympäri Otaniemeä komennolla `suuntana <ilmansuunta>`
+* Pelaaja voi suorittaa tehtäviä kyseisen alueen tehtävä listasta. Tehtävä suoritetaan komennolla `suorita <tehtävänumero>`
 * Mikäli pelaajan to-do -listassa on esimerkiksi kahden aineen laskarit, hänen tulee käydä kaksi kertaa itseopiskelutilassa.
-* Pelaaja voi tarkistaa oman to-do -listansa tilanteen komennolla ´tarkista´
+* Pelaaja voi tarkistaa oman to-do -listansa tilanteen komennolla `tarkista`
 * Pelaajalla on kaksi kaveria, jotka liikkuvat sattumanvaraisesti pelialueella. Onnistunut koulupäivä vaatii myös heidän kanssa jutustelua.
