@@ -1,6 +1,6 @@
 package o1.otaniemiGame
 
-import scala.collection.mutable.Map
+import scala.collection.mutable
 
 
 /** A `Player` object represents a player character controlled by the real-life user of the program.
@@ -10,18 +10,30 @@ import scala.collection.mutable.Map
   * @param startingArea  the initial location of the player */
 class Player(startingArea: Area) {
 
-  private var currentLocation = startingArea        // gatherer: changes in relation to the previous location
-  private var quitCommandGiven = false              // one-way flag
-  private val items = Map[String, Item]()
+  private var currentLocation = startingArea
+  private var quitCommandGiven = false
+  private val items = mutable.Map[String, Item]()
+  private val doneTasks = mutable.Buffer[String]()
 
-  def doTask(itemName: String): String = {
-    val item = this.currentLocation.removeItem(itemName)
-    var string = s"There is no $itemName here to pick up."
-    if (item.isDefined) {
-      item.foreach(i => items += itemName -> i)
-      string = s"You pick up the $itemName."
+  private val toDo = Map[String, String](
+    "muistiinpanoja" -> "Käy luennolla ja tee muistiinpanoja vihkoon.",
+    "laskuharjoituksia" -> "Tee matematiikan laskuharjoituksia vihkoon.",
+    "ohjelmointia" -> "Jatka O1-kurssin tehtäviä tietokoneellasi.",
+    "lounaalle" -> "Nauti lounas käymällä jossakin opiskelijaravintolassa.",
+    "kahvi" -> "Nappaa kahvi mukaan, jotta jaksat pitkän päivän.",
+  )
+
+  def doTask(activityName: String): (Int, String) = {
+    val activity = this.currentLocation.getActivity(activityName)
+    var string = "Tämä toimenpide ei onnistu täällä."
+    if (activity.isDefined) {
+      activity.foreach(a => this.doneTasks += activityName)
+      string = s"Teit $activityName. Aikaa kului 10 minuuttia."
+      10 -> string
     }
-    string
+    else {
+      0 -> string
+    }
   }
 
   def drop(itemName: String): String = {
@@ -35,28 +47,25 @@ class Player(startingArea: Area) {
     string
   }
 
-  // voi tarkastella päivän to-do listaa tämän avulla
-  def examine(itemName: String): String = {
-    val item = this.items.get(itemName)
-    var string = "Jos haluat tarkastella päivän to-do -listaa"
-    if (item.isDefined) {
-      val description = item.map(_.description).getOrElse("")
-      string = s"You look closely at the $itemName.\n$description"
-    }
-    string
-  }
+//  // voi tarkastella päivän to-do listaa tämän avulla
+//  def examine(itemName: String): String = {
+//    val item = this.items.get(itemName)
+//    var string = "Jos haluat tarkastella päivän to-do -listaa"
+//    if (item.isDefined) {
+//      val description = item.map(_.description).getOrElse("")
+//      string = s"You look closely at the $itemName.\n$description"
+//    }
+//    string
+//  }
 
   def hasDone(itemName: String): Boolean = {
-    this.items.contains(itemName)
+    this.doneTasks.contains(itemName)
   }
 
-  def inventory: String = {
-    var string = "You are empty-handed."
-    if (this.items.nonEmpty) {
-      val keys = this.items.keys.mkString("\n")
-      string = "You are carrying:\n" + keys
-    }
-    string
+  def checkList: (Int, String) = {
+    var string = "\nAlta voit tarkastella päivän to do -listaa.\n\nTo do:"
+    string = string + this.handlePrint
+    0 -> string
   }
 
 
@@ -70,7 +79,7 @@ class Player(startingArea: Area) {
 
   /** Attempts to move the player in the given direction. This is successful if there
     * is an exit from the player's current location towards the direction name. Returns
-    * a description of the result: "You go DIRECTION." or "You can't go DIRECTION." */
+    * a description of the result. */
   def walk(direction: String): (Int, String) = {
     val destination = this.location.neighbor(direction)
     this.currentLocation = destination.getOrElse(this.currentLocation)
@@ -86,6 +95,7 @@ class Player(startingArea: Area) {
 
   def go(subArea: String): (Int, String) = {
     val destination = this.location.subArea(subArea)
+    destination.foreach(_.setNeighbor("takaisin", this.currentLocation))
     this.currentLocation = destination.getOrElse(this.currentLocation)
     var string = "Et voi mennä " + subArea + " täällä."
     if (destination.isDefined) {
@@ -110,6 +120,18 @@ class Player(startingArea: Area) {
   def quit(): String = {
     this.quitCommandGiven = true
     ""
+  }
+
+  def handlePrint: String = {
+    var string = ""
+    this.toDo.foreach(todo =>
+      if (this.hasDone(todo._1)) {
+        string = string + s"\n[x] ${todo._2}"
+      } else {
+        string = string + s"\n[ ] ${todo._2}"
+      }
+    )
+    string
   }
 
 

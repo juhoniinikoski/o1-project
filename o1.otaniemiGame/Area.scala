@@ -1,6 +1,6 @@
 package o1.otaniemiGame
 
-import scala.collection.mutable.Map
+import scala.collection.mutable
 
 /** The class `Area` represents locations in a text adventure game world. A game world
   * consists of areas. In general, an "area" can be pretty much anything: a room, a building,
@@ -11,9 +11,9 @@ import scala.collection.mutable.Map
   * @param description  a basic description of the area (typically not including information about items) */
 class Area(var name: String, var description: String) {
 
-  private val neighbors = Map[String, Area]()
-  private val subAreas = Map[String, Area]()
-  private val activities = Map[String, Item]()
+  private val neighbors = mutable.Map[String, Area]()
+  private val subAreas = mutable.Map[String, Area]()
+  private val activities = mutable.Map[String, Item]()
 
   def contains(itemName: String): Boolean = {
     this.activities.contains(itemName)
@@ -30,6 +30,8 @@ class Area(var name: String, var description: String) {
     }
     activity
   }
+
+  def getActivity(activityName: String): Option[Item] = this.activities.get(activityName)
 
   /** Returns the area that can be reached from this area by moving in the given direction. The result
     * is returned in an `Option`; `None` is returned if there is no exit in the given direction. */

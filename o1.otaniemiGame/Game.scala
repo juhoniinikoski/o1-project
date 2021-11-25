@@ -6,15 +6,18 @@ class Game {
   /** The title of the adventure game. */
   val title = "Koulupäivä Otaniemessä"
 
-  // Items
+  /** Items */
   private val seat = new Item("seat", "Mennä opiskelemaan päivän askareita.")
-  private val exercise = new Item("exercise", "Tehdä matematiikan laskuharjoituksia.")
+  private val exercise = new Item("laskuharjoituksia", "Tehdä matematiikan laskuharjoituksia.")
+  private val programming = new Item("ohjelmointia", "Tehdä O1 ohjelmoinnin keskeneräisiä tehtäviä.")
   private val restaurant = new Item("restaurant", "Mennä lounaalle täyttämään vatsasi.")
-  private val lunch = new Item("lunch", "Syödä ravitsevan opiskelijalounaan.")
+  private val lunch = new Item("lounas", "Syödä ravitsevan opiskelijalounaan.")
   private val lecture = new Item("lecture", "Mennä luennolle kuuntelemaan päivän polttavaa luentoa!")
-  private val friends = new Item("friends", "Jutella kavereiden kanssa kuulumisista.")
+  private val notes = new Item("muistiinpanoja", "Kirjoittaa muistiinpanoja vihkoon.")
+  private val friends = new Item("kavereille", "Jutella kavereiden kanssa kuulumisista.")
+  private val coffee = new Item("coffee", "Ottaa mukaan lounaskahvin.")
 
-  // Areas
+  /** Areas */
   private val metro      = new Area("Metro", "Olet metroasemalla.\nMetrot metelöivät ja ihmisiä vilisee.")
   private val aBloc      = new Area("A Bloc", "Olet A Bloc ostoskeskuksessa.\nRuoka ja kahvi tuoksuu, nam.")
   private val dipoli     = new Area("Dipoli", "Olet Aalto-yliopiston päärakennuksessa Dipolissa.\nTäällä ei yksikään ikkuna ole toistensa kanssa samankokoinen.")
@@ -26,38 +29,20 @@ class Game {
   private val aukio      = new Area("Aukio", "Olet aukiolla metroaseman ja Väreen edustalla.\nHuomaat kuinka jokainen ohikulkija tuijottaa puhelintaan.")
   private val kandilafka = new Area("Kandidaattikeskus", "Olet kandidaattikeskuksessa, legendaarisen TKK:n päärakennuksessa.")
 
-  // Restaurants
-  private val blocRestaurant = new Area("Ravintola", "Olet ravintolassa, jossa tuoksut leijailevat.")
-  blocRestaurant.setNeighbor("takaisin", aBloc)
-  blocRestaurant.addItem(lunch)
-  private val dipoliRestaurant = new Area("Ravintola", "Olet ravintolassa, jossa tuoksut leijailevat.")
-  dipoliRestaurant.setNeighbor("takaisin", dipoli)
-  dipoliRestaurant.addItem(lunch)
-  private val tTaloRestaurant = new Area("Ravintola", "Olet ravintolassa, jossa tuoksut leijailevat.")
-  tTaloRestaurant.setNeighbor("takaisin", tTalo)
-  tTaloRestaurant.addItem(lunch)
-  private val tuasRestaurant = new Area("Ravintola", "Olet ravintolassa, jossa tuoksut leijailevat.")
-  tuasRestaurant.setNeighbor("takaisin", tuas)
-  tuasRestaurant.addItem(lunch)
-  private val taffaRestaurant = new Area("Ravintola", "Olet ravintolassa, jossa tuoksut leijailevat.")
-  taffaRestaurant.setNeighbor("takaisin", taffa)
-  taffaRestaurant.addItem(lunch)
-  private val kandiRestaurant = new Area("Ravintola", "Olet ravintolassa, jossa tuoksut leijailevat.")
-  kandiRestaurant.setNeighbor("takaisin", kandilafka)
-  kandiRestaurant.addItem(lunch)
+  /** Restaurant */
+  private val restaurantArea = new Area("Ravintola", "Olet ravintolassa, jossa tuoksut leijailevat.")
+  restaurantArea.addItem(lunch)
+  restaurantArea.addItem(coffee)
 
-  // Study areas
-  private val tTaloStudyArea = new Area("Opiskelutila", "Olet opiskelutilassa, jossa ajatus lentää ja luovuus on huipussaan.")
-  tTaloStudyArea.setNeighbor("takaisin", tTalo)
-  tTaloStudyArea.addItem(exercise)
-  private val tuasStudyArea = new Area("Opiskelutila", "Olet opiskelutilassa, jossa ajatus lentää ja luovuus on huipussaan.")
-  tuasStudyArea.setNeighbor("takaisin", tuas)
-  tuasStudyArea.addItem(exercise)
-  private val kandiStudyArea = new Area("Opiskelutila", "Olet opiskelutilassa, jossa ajatus lentää ja luovuus on huipussaan.")
-  kandiStudyArea.setNeighbor("takaisin", kandilafka)
-  kandiStudyArea.addItem(exercise)
+  /** Study area */
+  private val studyArea = new Area("Opiskelutila", "Olet opiskelutilassa, jossa ajatus lentää ja luovuus on huipussaan.")
+  studyArea.addItem(exercise)
+  studyArea.addItem(programming)
 
-  // Setting neighbours
+  private val lectureHall = new Area("Luentosali", "Olet luentosalissa. Keskity, niin ymmärrät.")
+  lectureHall.addItem(notes)
+
+  /** Setting neighbours */
   metro.setNeighbors(Vector("itään" -> aBloc, "etelään" -> kirjasto ))
   aBloc.setNeighbors(Vector("etelään" -> aukio, "länteen" -> metro))
   dipoli.setNeighbors(Vector("itään" -> kirjasto, "etelään" -> taffa))
@@ -69,15 +54,15 @@ class Game {
   taffa.setNeighbors(Vector("pohjoiseen" -> dipoli, "itään" -> alvari))
   kandilafka.setNeighbors(Vector("pohjoiseen" -> aukio, "länteen" -> alvari))
 
-  // Setting subareas
-  aBloc.setSubareas(Vector("lounaalle" -> blocRestaurant))
-  dipoli.setSubareas(Vector("lounaalle" -> dipoliRestaurant))
-  taffa.setSubareas(Vector("lounaalle" -> taffaRestaurant))
-  tTalo.setSubareas(Vector("lounaalle" -> tTaloRestaurant, "opiskelemaan" -> tTaloStudyArea))
-  tuas.setSubareas(Vector("lounaalle" -> tuasRestaurant, "opiskelemaan" -> tuasStudyArea))
-  kandilafka.setSubareas(Vector("lounaalle" -> kandiRestaurant, "opiskelemaan" -> kandiStudyArea))
+  /** Setting subareas */
+  aBloc.setSubareas(Vector("lounaalle" -> restaurantArea))
+  dipoli.setSubareas(Vector("lounaalle" -> restaurantArea))
+  taffa.setSubareas(Vector("lounaalle" -> restaurantArea))
+  tTalo.setSubareas(Vector("lounaalle" -> restaurantArea, "opiskelemaan" -> studyArea, "luennolle" -> lectureHall))
+  tuas.setSubareas(Vector("lounaalle" -> restaurantArea, "opiskelemaan" -> studyArea, "luennolle" -> lectureHall))
+  kandilafka.setSubareas(Vector("lounaalle" -> restaurantArea, "opiskelemaan" -> studyArea, "luennolle" -> lectureHall))
 
-  // Adding items
+  /** Adding items */
   aBloc.addItem(restaurant)
   aBloc.addItem(new Item("coffee", "Ottaa ärrältä kahvin suhteellisen edullisesti mukaan!"))
 
@@ -105,9 +90,6 @@ class Game {
   kandilafka.addItem(restaurant)
   kandilafka.addItem(lecture)
 
-  taffaRestaurant.addItem(lunch)
-
-
 
   /** The character that the player controls in the game. */
   val player = new Player(aukio)
@@ -130,31 +112,11 @@ class Game {
   /** Determines whether the player has won, lost, or quit, thereby ending the game. */
   def isOver: Boolean = this.isComplete || this.player.hasQuit || this.minuteCount >= this.minuteLimit
 
-  private val toDo = Map[String, String](
-    "lecture" -> "Käy luennolla ja tee muistiinpanoja vihkoon.",
-    "homework" -> "Tee matematiikan laskuharjoituksia vihkoon.",
-    "code" -> "Jatka O1-kurssin tehtäviä tietokoneellasi.",
-    "lunch" -> "Nauti lounas käymällä jossakin opiskelijaravintolassa.",
-    "coffee" -> "Nappaa kahvi mukaan, jotta jaksat pitkän päivän.",
-  )
-
   /** Returns a message that is to be displayed to the player at the beginning of the game. */
   def welcomeMessage: String = {
     // haluisin ehkä vähän muokkaa tätä
     var string = "\nHuh, taas uusi koulupäivä koittaa.\nTee vähintään kolme tehtävää päivän to do listasta, niin voit iloisin mielin illalla lopettaa päivän. \n\nTo do:"
-    string = string + this.handlePrint
-    string
-  }
-
-  def handlePrint: String = {
-    var string = ""
-    this.toDo.values.foreach(v =>
-      if (this.player.hasDone(v)) {
-        string = string + s"\n[x] $v"
-      } else {
-        string = string + s"\n[ ] $v"
-      }
-    )
+    string = string + this.player.handlePrint
     string
   }
 
@@ -184,7 +146,5 @@ class Game {
     }
     description.getOrElse("Tuntematon komento: \"" + command + "\".")
   }
-
-
 }
 

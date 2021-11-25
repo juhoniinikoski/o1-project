@@ -19,6 +19,8 @@ class Action(input: String) {
   def execute(actor: Player): Option[(Int, String)] = this.verb match {
     case "kulje"    => Some(actor.walk(this.modifiers))
     case "mene"     => Some(actor.go(this.modifiers))
+    case "tee"      => Some(actor.doTask(this.modifiers))
+    case "tarkista" => Some(actor.checkList)
 //    case "rest"        => Some(actor.rest())
 //    case "xyzzy"       => Some("The grue tastes yummy.")
 //    case "quit"        => Some(actor.quit())
