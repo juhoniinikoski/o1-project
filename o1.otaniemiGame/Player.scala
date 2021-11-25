@@ -114,7 +114,7 @@ class Player(startingArea: Area) {
     "You rest for a while. Better get a move on, though."
   }
 
-  def sing(): String = {
+  def sing(): (Int, String) = {
     val song = "Joku laulu" // pitäiskö täs olla vaikka 3 vaihtoehtoa joista aina arvotaan yks
     val string = "\nOtaniemessä vallitsee aurinkoinen sää, joten olet niin hyvällä tuulella, että alkoi laulattaa."
     0 -> song+string
