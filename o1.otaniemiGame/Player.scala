@@ -114,6 +114,18 @@ class Player(startingArea: Area) {
     "You rest for a while. Better get a move on, though."
   }
 
+  def sing(): String = {
+    val song = "Joku laulu" // pitäiskö täs olla vaikka 3 vaihtoehtoa joista aina arvotaan yks
+    val string = "\nOtaniemessä vallitsee aurinkoinen sää, joten olet niin hyvällä tuulella, että alkoi laulattaa."
+    0 -> song+string
+  }
+
+  def eat(food: String): (Int, String) = {
+    food match {
+      case "kasvista" => vegetarianFood -> "Mums, herkullista kasvispaellaa!"
+      case "lihaa" => meatFood -> "Nam nam, jauhenlihatortillat kelpaavat aina!"
+    }
+  }
 
   /** Signals that the player wants to quit the game. Returns a description of what happened within
     * the game as a result (which is the empty string, in this case). */
