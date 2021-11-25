@@ -12,6 +12,7 @@ import scala.collection.mutable.Map
 class Area(var name: String, var description: String) {
 
   private val neighbors = Map[String, Area]()
+  private val subAreas = Map[String, Area]()
   private val activities = Map[String, Item]()
 
   def contains(itemName: String): Boolean = {
@@ -32,12 +33,12 @@ class Area(var name: String, var description: String) {
 
   /** Returns the area that can be reached from this area by moving in the given direction. The result
     * is returned in an `Option`; `None` is returned if there is no exit in the given direction. */
-  def neighbor(direction: String) = this.neighbors.get(direction)
+  def neighbor(direction: String): Option[Area] = this.neighbors.get(direction)
 
 
   /** Adds an exit from this area to the given area. The neighboring area is reached by moving in
     * the specified direction from this area. */
-  def setNeighbor(direction: String, neighbor: Area) = {
+  def setNeighbor(direction: String, neighbor: Area): Unit = {
     this.neighbors += direction -> neighbor
   }
 
@@ -46,25 +47,32 @@ class Area(var name: String, var description: String) {
     * the `setNeighbor` method on each of the given direction--area pairs.
     * @param exits  contains pairs consisting of a direction and the neighboring area in that direction
     * @see [[setNeighbor]] */
-  def setNeighbors(exits: Vector[(String, Area)]) = {
+  def setNeighbors(exits: Vector[(String, Area)]): Unit = {
     this.neighbors ++= exits
   }
 
+  /** Returns the subArea that can be reached from this area by moving in the given direction. The result
+    * is returned in an `Option`; `None` is returned if there is no exit in the given direction. */
+  def subArea(location: String): Option[Area] = this.subAreas.get(location)
+
+  /** Adds exits from this area to the given subAreas.
+    * @param exits  contains pairs consisting of an activity and the neighboring subArea in that direction. */
+  def setSubareas(exits: Vector[(String, Area)]): Unit = {
+    this.subAreas ++= exits
+  }
 
   /** Returns a multi-line description of the area as a player sees it. This includes a basic
     * description of the area as well as information about exits and items. The return
     * value has the form "DESCRIPTION\n\nExits available: DIRECTIONS SEPARATED BY SPACES".
     * The directions are listed in an arbitrary order. */
   def fullDescription: String = {
-    val exitList = "\n\nSuunnat, joihin voit kulkea: " + this.neighbors.keys.mkString(" ")
+    val exitList = "\n\nVoit kulkea: " + this.neighbors.keys.mkString(" ")
     var string = this.description
     if (this.activities.nonEmpty) {
       var itemList = "\n\nTäällä voit: "
       val descriptions = this.activities.values.map(_.description)
-      var i = 1
       for (description <- descriptions) {
-        itemList += s"\n${i}. ${description}"
-        i += 1
+        itemList += s"\n* $description"
       }
       string = string + itemList
     }
@@ -73,7 +81,7 @@ class Area(var name: String, var description: String) {
 
 
   /** Returns a single-line description of the area for debugging purposes. */
-  override def toString = this.name + ": " + this.description.replaceAll("\n", " ").take(150)
+  override def toString: String = this.name + ": " + this.description.replaceAll("\n", " ").take(150)
 
 
 

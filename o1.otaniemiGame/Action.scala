@@ -17,7 +17,8 @@ class Action(input: String) {
     * of the action (such as "You go west."). The description is returned in an `Option`
     * wrapper; if the command was not recognized, `None` is returned. */
   def execute(actor: Player): Option[(Int, String)] = this.verb match {
-    case "suuntana"    => Some(actor.go(this.modifiers))
+    case "kulje"    => Some(actor.walk(this.modifiers))
+    case "mene"     => Some(actor.go(this.modifiers))
 //    case "rest"        => Some(actor.rest())
 //    case "xyzzy"       => Some("The grue tastes yummy.")
 //    case "quit"        => Some(actor.quit())
