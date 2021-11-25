@@ -127,6 +127,10 @@ class Player(startingArea: Area) {
     }
   }
 
+  def scare(): (Int, String) = {
+    5 -> "Kvaak, kvaak!!\nHanhet lähtivät karkuun, kun pelästytit ne juoksemalla Alvarin aukion läpi."
+  }
+
   /** Signals that the player wants to quit the game. Returns a description of what happened within
     * the game as a result (which is the empty string, in this case). */
   def quit(): String = {
