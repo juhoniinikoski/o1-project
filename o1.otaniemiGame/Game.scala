@@ -25,6 +25,7 @@ class Game {
   private val flyerItem = new Item("esite", "Esite, joka kertoo tämän viikon rekrymessujen osallistujayrityksistä.")
 
   /** Areas */
+  private val home       = new Area("Koti", "Olet kotona.\nOma koti kullan kallis.")
   private val metro      = new Area("Metro", "Olet metroasemalla.\nMetrot metelöivät ja ihmisiä vilisee.")
   private val aBloc      = new Area("A Bloc", "Olet A Bloc ostoskeskuksessa.\nRuoka ja kahvi tuoksuu, nam.")
   private val dipoli     = new Area("Dipoli", "Olet Aalto-yliopiston päärakennuksessa Dipolissa.\nTäällä ei yksikään ikkuna ole toistensa kanssa samankokoinen.")
@@ -51,7 +52,8 @@ class Game {
   lectureHall.addActivity(notes)
 
   /** Setting neighbours */
-  metro.setNeighbors(Vector("itään" -> aBloc, "etelään" -> kirjasto ))
+  home.setNeighbors(Vector("kouluun" -> metro))
+  metro.setNeighbors(Vector("itään" -> aBloc, "etelään" -> kirjasto, "kotiin" -> home))
   aBloc.setNeighbors(Vector("etelään" -> aukio, "länteen" -> metro))
   dipoli.setNeighbors(Vector("itään" -> kirjasto, "etelään" -> taffa))
   kirjasto.setNeighbors(Vector("pohjoiseen" -> metro, "itään" -> aukio, "etelään" -> alvari, "länteen" -> dipoli))
@@ -72,6 +74,11 @@ class Game {
   kirjasto.setSubareas(Vector("opiskelemaan" -> studyArea))
 
   /** Adding activities and items */
+  home.addItem(computerItem)
+  home.addItem(notebookItem)
+  home.addActivity(new Item("tietokone", "Ottaa tietokoneen mukaan."))
+  home.addActivity(new Item("vihko", "Ottaa vihkon mukaan."))
+
   aBloc.addActivity(restaurant)
   aBloc.addActivity(new Item("kahvi", "Ottaa ärrältä kahvin suhteellisen edullisesti mukaan!"))
   aBloc.addItem(coffeeItem)
@@ -105,12 +112,14 @@ class Game {
 
 
   /** The character that the player controls in the game. */
-  val player = new Player(aukio)
+  val player = new Player(home)
 
   /** The number of minutes that have passed since the start of the game. */
   var minuteCount: Int = 0
   /** The maximum number of minutes that this game allows before time runs out. */
   val minuteLimit: Int = 8 * 60 // eight hours
+
+
 
 
   /** Determines if the adventure is complete, that is, if the player has won. */
@@ -123,12 +132,14 @@ class Game {
   }
 
   /** Determines whether the player has won, lost, or quit, thereby ending the game. */
-  def isOver: Boolean = this.isComplete || this.player.hasQuit || this.minuteCount >= this.minuteLimit
+  def isOver: Boolean = false
+    //this.isComplete || this.player.hasQuit || this.minuteCount >= this.minuteLimit
 
   /** Returns a message that is to be displayed to the player at the beginning of the game. */
   def welcomeMessage: String = {
     var string = "\nHuh, taas uusi koulupäivä koittaa.\nTee päivän tehtävät to do listasta, niin voit iloisin mielin illalla lopettaa päivän. \n\nTo do:"
     string = string + this.player.handlePrint
+    string = string + "\n\n Ennen kuin lähdet kouluun, muista ottaa tietokone ja vihko mukaan, jotta voit tehdä päivän tehtävät!"
     string
   }
 
@@ -147,8 +158,18 @@ class Game {
   def countHours: String = {
     val hours = this.minuteCount / 60
     val minutes = this.minuteCount % 60
-    if (minutes < 10) s"\n\nKello on nyt ${8+hours}:0${minutes}.\nKoulun tilat sulkeutuvat kello 16:00."
-    else s"\n\nKello on nyt ${8+hours}:${minutes}.\nKoulun tilat sulkeutuvat kello 16:00."
+    if (8 + hours >= 16) {
+      if (minutes < 10) s"\n\nKello on nyt ${8+hours}:0$minutes.\nKoulun tilat ovat sulkeutuneet. Et voi tehdä siellä enää hommia.\nSuuntaa kotia kohti."
+      else s"\n\nKello on nyt ${8+hours}:$minutes.\nKoulun tilat ovat sulkeutuneet. Et voi tehdä siellä enää hommia\nSuuntaa kotia kohti.."
+    } else {
+      if (minutes < 10) s"\n\nKello on nyt ${8+hours}:0$minutes.\nKoulun tilat sulkeutuvat kello 16:00."
+      else s"\n\nKello on nyt ${8+hours}:$minutes.\nKoulun tilat sulkeutuvat kello 16:00."
+    }
+  }
+
+  def closeActivities(): Unit = {
+    val limitedAreas = Vector[Area](dipoli, kirjasto, tTalo, tuas, taffa, kandilafka)
+    limitedAreas.foreach(_.removeActivities())
   }
 
 
@@ -163,6 +184,7 @@ class Game {
     if (description.isDefined) {
       this.minuteCount += time
     }
+    if (this.minuteCount >= this.minuteLimit) this.closeActivities()
     description.getOrElse("Tuntematon komento: \"" + command + "\".") + this.countHours
   }
 }

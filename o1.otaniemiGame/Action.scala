@@ -1,10 +1,6 @@
 package o1.otaniemiGame
 
 
-/** The class `Action` represents actions that a player may take in a text adventure game.
-  * `Action` objects are constructed on the basis of textual commands and are, in effect,
-  * parsers for such commands. An action object is immutable after creation.
-  * @param input  a textual in-game command such as "go east" or "rest" */
 class Action(input: String) {
 
   private val commandText = input.trim.toLowerCase
@@ -27,13 +23,6 @@ class Action(input: String) {
     case "ota"      => Some(actor.take(this.modifiers))
     case "tavarat"  => Some(actor.examine)
     case "juttele"  => Some(actor.talk)
-//    case "rest"        => Some(actor.rest())
-//    case "xyzzy"       => Some("The grue tastes yummy.")
-//    case "quit"        => Some(actor.quit())
-//    case "inventory"   => Some(actor.inventory)
-//    case "tee"         => Some(actor.doTask(this.modifiers))
-//    case "drop"        => Some(actor.drop(this.modifiers))
-//    case "examine"     => Some(actor.examine(this.modifiers))
     case _               => None
   }
 

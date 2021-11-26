@@ -27,23 +27,20 @@ class Player(startingArea: Area) {
   )
 
   def doTask(activityName: String): (Int, String) = {
-    val activity = this.currentLocation.getActivity(activityName)
-    var string = "Tämä toimenpide ei onnistu täällä."
-    if (this.doneTasks.contains(activityName)) {
-      string = s"Sinä olet tehnyt jo $activityName, keskity muihin asioihin."
-      0 -> string
-    } else if (activity.isDefined) {
+    val activity = this.currentLocation.getActivity(activityName) // wrappaa aktiviteetin optioniin
+    if (this.doneTasks.contains(activityName)) { // jos tehtävä on jo tehty
+      0 -> s"Sinä olet tehnyt jo $activityName, keskity muihin asioihin."
+    } else if (activity.isDefined) { // jos tehtävä on määritelty
       var time = 0
       activityName match {
-        case "ohjelmointia" => time = programmingTime
+        case "ohjelmointia"      => time = programmingTime
         case "laskuharjoituksia" => time = exerciseTime
-        case "muistiinpanoja" => time = lectureTime
+        case "muistiinpanoja"    => time = lectureTime
       }
       activity.foreach(_ => this.doneTasks += activityName)
-      string = s"Teit $activityName. Aikaa kului $time minuuttia."
-      time -> string
+      time -> s"Teit $activityName. Aikaa kului $time minuuttia."
     } else {
-      0 -> string
+      0 -> "Tämä toimenpide ei onnistu täällä."
     }
   }
 
@@ -143,9 +140,13 @@ class Player(startingArea: Area) {
     this.currentLocation = destination.getOrElse(this.currentLocation)
     var string = "Et voi kulkea " + direction + "."
     if (destination.isDefined) {
-      string = "Kuljit " + direction + ". Aikaa kului " + 5 + " minuuttia."
-      // walking time taken from constants
-      walkingTime -> string
+      if (direction == "kotiin" || direction == "kouluun") {
+        string = "Kuljit " + direction + ". Aikaa kului " + 20 + " minuuttia."
+        20 -> string
+      } else {
+        string = "Kuljit " + direction + ". Aikaa kului " + 5 + " minuuttia."
+        walkingTime -> string
+      }
     } else {
       0 -> string
     }
