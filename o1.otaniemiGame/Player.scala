@@ -16,6 +16,8 @@ class Player(startingArea: Area) {
   private var quitCommandGiven = false
   private val items = mutable.Map[String, Item]()
   private val doneTasks = mutable.Buffer[String]()
+  private val timeForActivity = mutable.Map[String, Int]("Ohjelmointi" -> programmingTime, "Laskuharjoitus" -> exerciseTime, "Muistiinpanot" -> lectureTime)
+  private val activities = mutable.Map[String, String]("Ohjelmointi" -> "ohjelmointia", "Laskuharjoitus" -> "laskuharjoituksia", "Muistiinpanot" -> "muistiinpanoja")
 
   private val toDo = Map[String, String](
     "muistiinpanoja" -> "Käy luennolla ja tee muistiinpanoja vihkoon.",
@@ -38,13 +40,13 @@ class Player(startingArea: Area) {
         case "ohjelmointia"      => nextLocation = this.currentLocation.subArea("ohjelmointia").getOrElse(this.currentLocation)
         case "laskuharjoituksia" => nextLocation = this.currentLocation.subArea("laskuharjoitusta").getOrElse(this.currentLocation)
         case "muistiinpanoja"    => nextLocation = this.currentLocation.subArea("muistiinpanoja").getOrElse(this.currentLocation)
-        case _ => nextLocation = this.currentLocation
+        case _                   => nextLocation = this.currentLocation
       }
       if (nextLocation != this.currentLocation) {
         nextLocation.setNeighbor("takaisin", this.currentLocation)
       }
       this.currentLocation = nextLocation
-      0 -> s"Ryhdyt tekemään $activityName"
+      0 -> s"Ryhdyt tekemään $activityName."
     } else {
       0 -> "Tämä toimenpide ei onnistu täällä."
     }
@@ -68,9 +70,42 @@ class Player(startingArea: Area) {
 //    }
 //  }
 
-  def useItem(itemName: String): (Int, String) = {
-    0 -> "testi"
+  /* Metodin tulisi merkitä parametrina annettu tehtävä valmiiksi to do listaan tai tehtyihin toimintoihin,
+  jos tehtävä on määritelty. Palauttaa totuusarvon sen mukaan toimiko tehtävän lisäys. */
+  def markDone(activityName: String): Boolean = {
+    val activity = this.currentLocation.getActivity(activityName.toLowerCase)
+    if (activity.isDefined) {
+      activity.foreach(_ => this.doneTasks += activityName)
+      true
+    } else {
+      false
+    }
   }
+
+  /*
+  def useItem(itemName: String): (Int, String) = {
+    var item = ""
+    itemName match {
+      case "vihkoa"       => item = "vihko"
+      case "tietokonetta" => item = "tietokone"
+      case _              => None
+    }
+    if (this.items.contains(item)) {
+      val time = timeForActivity(this.location.name)
+      if (markDone("laskaritietokone")) {
+        time -> s"Teit ${this.activities(this.location.name)} käyttäen ${itemName}.\nAikaa kului ${time} minuuttia."
+      } else {
+        0 -> s"Yritys tehdä ${this.activities(this.location.name)} epäonnistui. Kokeile uudelleen."
+      }
+    } else {
+      if (itemName == "vihkoa" || itemName == "tietokonetta") {
+        0 -> s"Sinulla ei ole ${itemName} mukana. Voit hakea sen kotoa."
+      } else {
+        0 -> s"Et voi käyttää ${itemName}. Valitse vihko tai tietokone."
+      }
+    }
+  }
+   */
 
   def take(itemName: String): (Int, String) = {
     val item = this.currentLocation.getItem(itemName)
@@ -92,9 +127,9 @@ class Player(startingArea: Area) {
     val activity = this.currentLocation.getActivity("kaverit")
     if (activity.isDefined) {
       this.doneTasks += "juttele"
-      talkingTime -> s"Pälä pälä pälä\npälä pälä\npälä pälä pälä pälä\n\nJuttelit kavereiden kanssa, aikaa kului $talkingTime minuuttia."
+      talkingTime -> s"Pälä pälä pälä\npälä pälä\npälä pälä pälä pälä...\n\nJuttelit kavereiden kanssa, aikaa kului $talkingTime minuuttia."
     } else {
-      0 -> "Täällä ei oikein ole ketään, kelle jutella."
+      0 -> "Täällä ei oikein ole ketään, kenelle jutella."
     }
   }
 
@@ -123,13 +158,12 @@ class Player(startingArea: Area) {
 
   def scare: (Int, String) = {
     val activity = this.currentLocation.getActivity("pelästytys")
-    val string = "Täällä ei ole ketään, jota pelästyttää."
     if (activity.isDefined) {
       this.currentLocation.removeActivity("pelästytys")
       5 -> "Kvaak, kvaak!!\nHanhet lähtivät karkuun, kun pelästytit ne juoksemalla Alvarin aukion läpi.\nTähän toimintaan kului 5 minuuttia."
     }
     else {
-      0 -> string
+      0 -> "Täällä ei ole ketään, jota pelästyttää."
     }
   }
 
@@ -138,7 +172,7 @@ class Player(startingArea: Area) {
     for (item <- this.items) {
       string += s"\n\n${item._1.capitalize}\n${item._2.description}"
     }
-    0-> string
+    0 -> string
   }
 
   def hasDone(itemName: String): Boolean = {
@@ -225,5 +259,3 @@ class Player(startingArea: Area) {
   override def toString: String = "Now at: " + this.location.name
 
 }
-
-
