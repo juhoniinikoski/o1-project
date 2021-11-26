@@ -18,6 +18,7 @@ object OtaniemiGameTextUI extends App {
     while (!this.game.isOver) {
       this.printAreaInfo()
       this.playTurn()
+      readLine("\nPaina enteriä jatkaaksesi.")
     }
     println("\n" + this.game.goodbyeMessage)
   }

@@ -1,5 +1,7 @@
 package o1.otaniemiGame
 
+import o1.Constants._
+
 import scala.collection.mutable
 
 
@@ -19,44 +21,101 @@ class Player(startingArea: Area) {
     "muistiinpanoja" -> "Käy luennolla ja tee muistiinpanoja vihkoon.",
     "laskuharjoituksia" -> "Tee matematiikan laskuharjoituksia vihkoon.",
     "ohjelmointia" -> "Jatka O1-kurssin tehtäviä tietokoneellasi.",
-    "lounaalle" -> "Nauti lounas käymällä jossakin opiskelijaravintolassa.",
+    "lounas" -> "Nauti lounas käymällä jossakin opiskelijaravintolassa.",
     "kahvi" -> "Nappaa kahvi mukaan, jotta jaksat pitkän päivän.",
+    "juttele" -> "Juttele kavereiden kanssa. Se piristää päivää ja auttaa jaksamaan."
   )
 
   def doTask(activityName: String): (Int, String) = {
     val activity = this.currentLocation.getActivity(activityName)
     var string = "Tämä toimenpide ei onnistu täällä."
+    if (this.doneTasks.contains(activityName)) {
+      string = s"Sinä olet tehnyt jo $activityName, keskity muihin asioihin."
+      0 -> string
+    } else if (activity.isDefined) {
+      var time = 0
+      activityName match {
+        case "ohjelmointia" => time = programmingTime
+        case "laskuharjoituksia" => time = exerciseTime
+        case "muistiinpanoja" => time = lectureTime
+      }
+      activity.foreach(_ => this.doneTasks += activityName)
+      string = s"Teit $activityName. Aikaa kului $time minuuttia."
+      time -> string
+    } else {
+      0 -> string
+    }
+  }
+
+  def take(itemName: String): (Int, String) = {
+    val item = this.currentLocation.getItem(itemName)
+    var string = s"${itemName.capitalize} ei ole otettavissa täältä."
+    if (this.items.contains(itemName)) {
+      string = s"Sinullahan on jo $itemName"
+    } else if (item.isDefined) {
+      item.foreach(i => this.items += itemName -> i)
+      this.currentLocation.removeItem(itemName)
+      if (itemName == "kahvi") {
+        this.doneTasks += itemName
+      }
+      string = s"${itemName.capitalize} otettu mukaan."
+    }
+    0 -> string
+  }
+
+  def talk: (Int, String) = {
+    val activity = this.currentLocation.getActivity("kaverit")
     if (activity.isDefined) {
-      activity.foreach(a => this.doneTasks += activityName)
-      string = s"Teit $activityName. Aikaa kului 10 minuuttia."
-      10 -> string
+      this.doneTasks += "juttele"
+      talkingTime -> s"Pälä pälä pälä\npälä pälä\npälä pälä pälä pälä\n\nJuttelit kavereiden kanssa, aikaa kului $talkingTime minuuttia."
+    } else {
+      0 -> "Täällä ei oikein ole ketään, kelle jutella."
+    }
+  }
+
+  def sing: (Int, String) = {
+    val song = "Joku laulu" // pitäiskö täs olla vaikka 3 vaihtoehtoa joista aina arvotaan yks
+    var string = "\nOtaniemessä vallitsee aurinkoinen sää, joten olet niin hyvällä tuulella, että alkoi laulattaa."
+    string = string + "\nLaulaminen ei kuluta aikaasi."
+    string = song+string
+    0 -> string
+  }
+
+  def eat(food: String): (Int, String) = {
+    if (this.hasDone("lounas")) {
+      0 -> "Olet syönyt jo lounaan, nyt kannattaa keskittyä muihin asioihin."
+    } else {
+      food match {
+        case "kasvista" =>
+          this.doneTasks += "lounas"
+          vegetarianFood -> s"Mums, herkullista kasvispaellaa! Aikaa lounaaseen kului $vegetarianFood minuuttia."
+        case "lihaa" =>
+          this.doneTasks += "lounas"
+          meatFood -> s"Nam nam, jauhenlihatortillat kelpaavat aina! Aikaa lounaaseen kului $meatFood minuuttia."
+        case _ => 0 -> "Vaihtoehtoina on joko syödä lihaa tai kasvista."
+      }
+    }
+  }
+
+  def scare: (Int, String) = {
+    val activity = this.currentLocation.getActivity("pelästytys")
+    val string = "Täällä ei ole ketään, jota pelästyttää."
+    if (activity.isDefined) {
+      this.currentLocation.removeActivity("pelästytys")
+      5 -> "Kvaak, kvaak!!\nHanhet lähtivät karkuun, kun pelästytit ne juoksemalla niitä kohti.\nTähän toimintaan kului 5 minuuttia."
     }
     else {
       0 -> string
     }
   }
 
-  def drop(itemName: String): String = {
-    val item = this.items.get(itemName)
-    var string = "You don't have that!"
-    if (item.isDefined) {
-      item.foreach(this.currentLocation.addItem(_))
-      string = s"You drop the $itemName."
-      this.items -= itemName
+  def examine: (Int, String) = {
+    var string = "Mukana olevat tavarat:"
+    for (item <- this.items) {
+      string += s"\n\n${item._1.capitalize}\n${item._2.description}"
     }
-    string
+    0-> string
   }
-
-//  // voi tarkastella päivän to-do listaa tämän avulla
-//  def examine(itemName: String): String = {
-//    val item = this.items.get(itemName)
-//    var string = "Jos haluat tarkastella päivän to-do -listaa"
-//    if (item.isDefined) {
-//      val description = item.map(_.description).getOrElse("")
-//      string = s"You look closely at the $itemName.\n$description"
-//    }
-//    string
-//  }
 
   def hasDone(itemName: String): Boolean = {
     this.doneTasks.contains(itemName)
@@ -93,11 +152,17 @@ class Player(startingArea: Area) {
     }
   }
 
+  /** Attempts to move the player to the given activity. This is successful if there
+    * is an activity from the player's current location that corresponds the given name. Returns
+    * a description of the result. */
   def go(subArea: String): (Int, String) = {
     val destination = this.location.subArea(subArea)
     destination.foreach(_.setNeighbor("takaisin", this.currentLocation))
     this.currentLocation = destination.getOrElse(this.currentLocation)
     var string = "Et voi mennä " + subArea + " täällä."
+    if (subArea == "") {
+      string = "Sinun tulee valita paikka, jonne haluat mennä."
+    }
     if (destination.isDefined) {
       string = "Menit " + subArea + ". Aikaa kului " + walkingTime + " minuuttia."
       // walking time taken from constants
@@ -112,24 +177,6 @@ class Player(startingArea: Area) {
     * Returns a description of what happened. */
   def rest(): String = {
     "You rest for a while. Better get a move on, though."
-  }
-
-  def sing(): (Int, String) = {
-    val song = "Joku laulu" // pitäiskö täs olla vaikka 3 vaihtoehtoa joista aina arvotaan yks
-    var string = "\nOtaniemessä vallitsee aurinkoinen sää, joten olet niin hyvällä tuulella, että alkoi laulattaa."
-    string = song+string
-    0 -> string
-  }
-
-  def eat(food: String): (Int, String) = {
-    food match {
-      case "kasvista" => vegetarianFood -> "Mums, herkullista kasvispaellaa!"
-      case "lihaa" => meatFood -> "Nam nam, jauhenlihatortillat kelpaavat aina!"
-    }
-  }
-
-  def scare(): (Int, String) = {
-    5 -> "Kvaak, kvaak!!\nHanhet lähtivät karkuun, kun pelästytit ne juoksemalla Alvarin aukion läpi."
   }
 
   /** Signals that the player wants to quit the game. Returns a description of what happened within

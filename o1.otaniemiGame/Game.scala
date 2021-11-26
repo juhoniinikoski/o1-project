@@ -6,16 +6,23 @@ class Game {
   /** The title of the adventure game. */
   val title = "Koulupäivä Otaniemessä"
 
-  /** Items */
+  /** Activities */
   private val seat = new Item("seat", "Mennä opiskelemaan päivän askareita.")
   private val exercise = new Item("laskuharjoituksia", "Tehdä matematiikan laskuharjoituksia.")
   private val programming = new Item("ohjelmointia", "Tehdä O1 ohjelmoinnin keskeneräisiä tehtäviä.")
-  private val restaurant = new Item("restaurant", "Mennä lounaalle täyttämään vatsasi.")
-  private val lunch = new Item("lounas", "Syödä ravitsevan opiskelijalounaan.")
-  private val lecture = new Item("lecture", "Mennä luennolle kuuntelemaan päivän polttavaa luentoa!")
-  private val notes = new Item("muistiinpanoja", "Kirjoittaa muistiinpanoja vihkoon.")
-  private val friends = new Item("kavereille", "Jutella kavereiden kanssa kuulumisista.")
-  private val coffee = new Item("coffee", "Ottaa mukaan lounaskahvin.")
+  private val restaurant = new Item("ravintola", "Mennä lounaalle täyttämään vatsasi.")
+  private val lunch = new Item("lounas", "Syödä ravitsevan opiskelijalounaan. Vaihtoehtoina on joko kasvis- tai liharuokaa.")
+  private val lecture = new Item("luento", "Mennä luennolle kuuntelemaan päivän polttavaa luentoa!")
+  private val notes = new Item("muistiinpanoja", "Tehdä muistiinpanoja vihkoon.")
+  private val friends = new Item("kaverit", "Jutella kavereiden kanssa kuulumisista.")
+  private val coffee = new Item("kahvi", "Ottaa mukaan lounaskahvin.")
+  private val scare = new Item("pelästytys", "Pelästyttää hanhia.")
+
+  /** Items */
+  private val coffeeItem = new Item("kahvi", "Kahvi piristämään päivää. Tekeepäs eetvarttia.")
+  private val notebookItem = new Item("vihko", "Vihko muistiinpanoja ja laskareita varten.")
+  private val computerItem = new Item("tietokone", "Läppäri esimerkiksi koodausta varten.")
+  private val flyerItem = new Item("esite", "Esite, joka kertoo tämän viikon rekrymessujen osallistujayrityksistä.")
 
   /** Areas */
   private val metro      = new Area("Metro", "Olet metroasemalla.\nMetrot metelöivät ja ihmisiä vilisee.")
@@ -31,16 +38,17 @@ class Game {
 
   /** Restaurant */
   private val restaurantArea = new Area("Ravintola", "Olet ravintolassa, jossa tuoksut leijailevat.")
-  restaurantArea.addItem(lunch)
-  restaurantArea.addItem(coffee)
+  restaurantArea.addActivity(lunch)
+  restaurantArea.addActivity(coffee)
+  restaurantArea.addItem(coffeeItem)
 
   /** Study area */
   private val studyArea = new Area("Opiskelutila", "Olet opiskelutilassa, jossa ajatus lentää ja luovuus on huipussaan.")
-  studyArea.addItem(exercise)
-  studyArea.addItem(programming)
+  studyArea.addActivity(exercise)
+  studyArea.addActivity(programming)
 
   private val lectureHall = new Area("Luentosali", "Olet luentosalissa. Keskity, niin ymmärrät.")
-  lectureHall.addItem(notes)
+  lectureHall.addActivity(notes)
 
   /** Setting neighbours */
   metro.setNeighbors(Vector("itään" -> aBloc, "etelään" -> kirjasto ))
@@ -61,34 +69,40 @@ class Game {
   tTalo.setSubareas(Vector("lounaalle" -> restaurantArea, "opiskelemaan" -> studyArea, "luennolle" -> lectureHall))
   tuas.setSubareas(Vector("lounaalle" -> restaurantArea, "opiskelemaan" -> studyArea, "luennolle" -> lectureHall))
   kandilafka.setSubareas(Vector("lounaalle" -> restaurantArea, "opiskelemaan" -> studyArea, "luennolle" -> lectureHall))
+  kirjasto.setSubareas(Vector("opiskelemaan" -> studyArea))
 
-  /** Adding items */
-  aBloc.addItem(restaurant)
-  aBloc.addItem(new Item("coffee", "Ottaa ärrältä kahvin suhteellisen edullisesti mukaan!"))
+  /** Adding activities and items */
+  aBloc.addActivity(restaurant)
+  aBloc.addActivity(new Item("kahvi", "Ottaa ärrältä kahvin suhteellisen edullisesti mukaan!"))
+  aBloc.addItem(coffeeItem)
 
-  dipoli.addItem(new Item("flyer", "Ottaa mukaan esite koskien Aallon rekrymessuja, jotka järjestetään Otahallissa!"))
-  dipoli.addItem(restaurant)
+  dipoli.addActivity(new Item("flyer", "Ottaa mukaan esite koskien Aallon rekrymessuja, jotka järjestetään Otahallissa!"))
+  dipoli.addActivity(restaurant)
+  dipoli.addItem(flyerItem)
 
-  kirjasto.addItem(new Item("book", "Lainata fysiikan kirjan jo ajoissa, tarvitset sitä tenttiviikkoa ajatellen."))
-  kirjasto.addItem(seat)
+  kirjasto.addActivity(new Item("book", "Lainata fysiikan kirjan jo ajoissa, tarvitset sitä tenttiviikkoa ajatellen."))
+  kirjasto.addActivity(seat)
 
-  tTalo.addItem(lecture)
-  tTalo.addItem(seat)
-  tTalo.addItem(restaurant)
-  tTalo.addItem(friends)
+  tTalo.addActivity(lecture)
+  tTalo.addActivity(seat)
+  tTalo.addActivity(restaurant)
+  tTalo.addActivity(friends)
 
-  tuas.addItem(seat)
-  tuas.addItem(restaurant)
-  tuas.addItem(lecture)
-  tuas.addItem(friends)
+  tuas.addActivity(seat)
+  tuas.addActivity(restaurant)
+  tuas.addActivity(lecture)
+  tuas.addActivity(friends)
 
-  taffa.addItem(restaurant)
-  taffa.addItem(friends)
+  taffa.addActivity(restaurant)
+  taffa.addActivity(friends)
 
-  kandilafka.addItem(seat)
-  kandilafka.addItem(friends)
-  kandilafka.addItem(restaurant)
-  kandilafka.addItem(lecture)
+  kandilafka.addActivity(seat)
+  kandilafka.addActivity(friends)
+  kandilafka.addActivity(restaurant)
+  kandilafka.addActivity(lecture)
+
+  aukio.addActivity(scare)
+  alvari.addActivity(scare)
 
 
   /** The character that the player controls in the game. */
@@ -115,7 +129,7 @@ class Game {
   /** Returns a message that is to be displayed to the player at the beginning of the game. */
   def welcomeMessage: String = {
     // haluisin ehkä vähän muokkaa tätä
-    var string = "\nHuh, taas uusi koulupäivä koittaa.\nTee vähintään kolme tehtävää päivän to do listasta, niin voit iloisin mielin illalla lopettaa päivän. \n\nTo do:"
+    var string = "\nHuh, taas uusi koulupäivä koittaa.\nTee päivän tehtävät to do listasta, niin voit iloisin mielin illalla lopettaa päivän. \n\nTo do:"
     string = string + this.player.handlePrint
     string
   }
@@ -132,6 +146,12 @@ class Game {
       "Luovuttajat eivät pärjää tosimaailmassa!!"
   }
 
+  def countHours: String = {
+    val hours = this.minuteCount / 60
+    val minutes = this.minuteCount % 60
+    s"\n\nKoulupäivään on käytetty aikaa $hours tuntia ja $minutes minuuttia.\nYhteensä aikaa on käytettävissä ${minuteLimit/60} tuntia."
+  }
+
 
   /** Plays a turn by executing the given in-game command, such as "go west". Returns a textual
     * report of what happened, or an error message if the command was unknown. In the latter
@@ -144,7 +164,7 @@ class Game {
     if (description.isDefined) {
       this.minuteCount += time
     }
-    description.getOrElse("Tuntematon komento: \"" + command + "\".")
+    description.getOrElse("Tuntematon komento: \"" + command + "\".") + this.countHours
   }
 }
 

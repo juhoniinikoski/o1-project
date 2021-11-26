@@ -22,8 +22,11 @@ class Action(input: String) {
     case "tee"      => Some(actor.doTask(this.modifiers))
     case "tarkista" => Some(actor.checkList)
     case "syö"      => Some(actor.eat(this.modifiers))
-    case "laula"    => Some(actor.sing())
-    case "pelästytä"=> Some(actor.scare())
+    case "laula"    => Some(actor.sing)
+    case "pelästytä"=> Some(actor.scare)
+    case "ota"      => Some(actor.take(this.modifiers))
+    case "tavarat"  => Some(actor.examine)
+    case "juttele"  => Some(actor.talk)
 //    case "rest"        => Some(actor.rest())
 //    case "xyzzy"       => Some("The grue tastes yummy.")
 //    case "quit"        => Some(actor.quit())
@@ -31,7 +34,7 @@ class Action(input: String) {
 //    case "tee"         => Some(actor.doTask(this.modifiers))
 //    case "drop"        => Some(actor.drop(this.modifiers))
 //    case "examine"     => Some(actor.examine(this.modifiers))
-    case other         => None
+    case _               => None
   }
 
 
