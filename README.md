@@ -84,11 +84,11 @@ Pelaaja läpäisee pelin, kun to do -listasta kaikki vaaditut tehtävät ovat te
 
 # TODO ennen ku peli on valmis
 
-* Laskuharjoituksen tekeminen tietokoneelle tai vihkolle
-* Kotoa lähtö ja tavaroiden pakkaaminen
-* Voitto- ja häviöehto (kotona tarkastetaan, onko kaikki tehtävät tehty)
-* Kotiin palaaminen
-* Rajoita koulun tilojen käyttö (jos kello on yli 16, ei anneta enää vaihtoehdoiksi luentoa, ruokailua, opiskleutiloja jne)
+* Laskuharjoituksen tekeminen tietokoneelle tai vihkolle (katariina)
+* Kotoa lähtö ja tavaroiden pakkaaminen (katariina)
+* Voitto- ja häviöehto (kotona tarkastetaan, onko kaikki tehtävät tehty) (katariina)
+* Kotiin palaaminen (juho)
+* Rajoita koulun tilojen käyttö (jos kello on yli 16, ei anneta enää vaihtoehdoiksi luentoa, ruokailua, opiskleutiloja jne) (juho)
 
 # A+ ohjeet
 
