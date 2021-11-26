@@ -101,7 +101,6 @@ class Game {
   kandilafka.addActivity(restaurant)
   kandilafka.addActivity(lecture)
 
-  aukio.addActivity(scare)
   alvari.addActivity(scare)
 
 
@@ -128,7 +127,6 @@ class Game {
 
   /** Returns a message that is to be displayed to the player at the beginning of the game. */
   def welcomeMessage: String = {
-    // haluisin ehkä vähän muokkaa tätä
     var string = "\nHuh, taas uusi koulupäivä koittaa.\nTee päivän tehtävät to do listasta, niin voit iloisin mielin illalla lopettaa päivän. \n\nTo do:"
     string = string + this.player.handlePrint
     string
@@ -149,7 +147,8 @@ class Game {
   def countHours: String = {
     val hours = this.minuteCount / 60
     val minutes = this.minuteCount % 60
-    s"\n\nKoulupäivään on käytetty aikaa $hours tuntia ja $minutes minuuttia.\nYhteensä aikaa on käytettävissä ${minuteLimit/60} tuntia."
+    if (minutes < 10) s"\n\nKello on nyt ${8+hours}:0${minutes}.\nKoulun tilat sulkeutuvat kello 16:00."
+    else s"\n\nKello on nyt ${8+hours}:${minutes}.\nKoulun tilat sulkeutuvat kello 16:00."
   }
 
 

@@ -51,7 +51,7 @@ class Player(startingArea: Area) {
     val item = this.currentLocation.getItem(itemName)
     var string = s"${itemName.capitalize} ei ole otettavissa täältä."
     if (this.items.contains(itemName)) {
-      string = s"Sinullahan on jo $itemName"
+      string = s"Sinullahan on jo $itemName."
     } else if (item.isDefined) {
       item.foreach(i => this.items += itemName -> i)
       this.currentLocation.removeItem(itemName)
@@ -74,10 +74,9 @@ class Player(startingArea: Area) {
   }
 
   def sing: (Int, String) = {
-    val song = "Joku laulu" // pitäiskö täs olla vaikka 3 vaihtoehtoa joista aina arvotaan yks
-    var string = "\nOtaniemessä vallitsee aurinkoinen sää, joten olet niin hyvällä tuulella, että alkoi laulattaa."
+    var string = "Lallalaa!\nKaivoit laukkuun unohtuneen sitsilaulukirjan ja repäisit kauniin virren."
+    string = string + "\nOtaniemessä vallitsee aurinkoinen sää, joten olet niin hyvällä tuulella, että alkoi laulattaa."
     string = string + "\nLaulaminen ei kuluta aikaasi."
-    string = song+string
     0 -> string
   }
 
@@ -102,7 +101,7 @@ class Player(startingArea: Area) {
     val string = "Täällä ei ole ketään, jota pelästyttää."
     if (activity.isDefined) {
       this.currentLocation.removeActivity("pelästytys")
-      5 -> "Kvaak, kvaak!!\nHanhet lähtivät karkuun, kun pelästytit ne juoksemalla niitä kohti.\nTähän toimintaan kului 5 minuuttia."
+      5 -> "Kvaak, kvaak!!\nHanhet lähtivät karkuun, kun pelästytit ne juoksemalla Alvarin aukion läpi.\nTähän toimintaan kului 5 minuuttia."
     }
     else {
       0 -> string
@@ -172,12 +171,6 @@ class Player(startingArea: Area) {
     }
   }
 
-
-  /** Causes the player to rest for a short while (this has no substantial effect in game terms).
-    * Returns a description of what happened. */
-  def rest(): String = {
-    "You rest for a while. Better get a move on, though."
-  }
 
   /** Signals that the player wants to quit the game. Returns a description of what happened within
     * the game as a result (which is the empty string, in this case). */
