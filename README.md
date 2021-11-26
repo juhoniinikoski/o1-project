@@ -80,7 +80,7 @@ Pelaaja läpäisee pelin, kun to do -listasta kaikki vaaditut tehtävät ovat te
 # Tehtäväluokat
 
 * Task: Lounas/ruokailu, kahvittelu, luento, laskarin tekeminen, O1 koodaus
-* Item: Läppäri, vihko
+* Item: Läppäri, vihko, sitsilaulukirja
 
 # A+ ohjeet
 
