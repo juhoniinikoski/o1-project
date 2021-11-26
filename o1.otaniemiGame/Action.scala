@@ -10,7 +10,7 @@ class Action(input: String) {
 
   /** Causes the given player to take the action represented by this object, assuming
     * that the command was understood. Returns a description of what happened as a result
-    * of the action (such as "You go west."). The description is returned in an `Option`
+    * of the action (such as "Tietokone otettu mukaan."). The description is returned in an `Option`
     * wrapper; if the command was not recognized, `None` is returned. */
   def execute(actor: Player): Option[(Int, String)] = this.verb match {
     case "kulje"    => Some(actor.walk(this.modifiers))
@@ -23,6 +23,7 @@ class Action(input: String) {
     case "ota"      => Some(actor.take(this.modifiers))
     case "tavarat"  => Some(actor.examine)
     case "juttele"  => Some(actor.talk)
+    // case "käytä"    => Some(actor.useItem(this.modifiers))
     case _               => None
   }
 
@@ -32,4 +33,3 @@ class Action(input: String) {
 
 
 }
-
