@@ -13,10 +13,15 @@ class Game {
   private val restaurant = new Item("ravintola", "Mennä lounaalle täyttämään vatsasi.")
   private val lunch = new Item("lounas", "Syödä ravitsevan opiskelijalounaan. Vaihtoehtoina on joko kasvis- tai liharuokaa.")
   private val lecture = new Item("luento", "Mennä luennolle kuuntelemaan päivän polttavaa luentoa!")
-  private val notes = new Item("muistiinpanoja", "Tehdä muistiinpanoja vihkoon.")
+  private val notes = new Item("muistiinpanoja", "Tehdä muistiinpanoja.")
   private val friends = new Item("kaverit", "Jutella kavereiden kanssa kuulumisista.")
   private val coffee = new Item("kahvi", "Ottaa mukaan lounaskahvin.")
   private val scare = new Item("pelästytys", "Pelästyttää hanhia.")
+  private val lectureNotebook = new Item("luentovihko", "Käyttää vihkoa muistiinpanoihin.")
+  private val lectureComputer = new Item("luentotietokone", "Käyttää tietokonetta muistiinpanoihin.")
+  private val exerciseNoteBook = new Item("laskarivihko", "Käyttää vihkoa harjoitusten tekemiseen.")
+  private val exerciseComputer = new Item("laskaritietokone", "Käyttää tietokonetta harjoitusten tekemiseen.")
+  private val programmingComputer = new Item("koodauskone", "Käyttää tietokonetta ohjelmointiin.")
 
   /** Items */
   private val coffeeItem = new Item("kahvi", "Kahvi piristämään päivää. Tekeepäs eetvarttia.")
@@ -37,6 +42,24 @@ class Game {
   private val aukio      = new Area("Aukio", "Olet aukiolla metroaseman ja Väreen edustalla.\nHuomaat kuinka jokainen ohikulkija tuijottaa puhelintaan.")
   private val kandilafka = new Area("Kandidaattikeskus", "Olet kandidaattikeskuksessa, legendaarisen TKK:n päärakennuksessa.")
 
+  /** Laskuharjoitus */
+  private val exerciseArea = new Area("Laskuharjoitus", "Alat tekemään laskuharjoitusta.")
+  exerciseArea.addUsableItem(computerItem)
+  exerciseArea.addUsableItem(notebookItem)
+  exerciseArea.addActivity(exerciseComputer)
+  exerciseArea.addActivity(exerciseNoteBook)
+
+  /** Ohjelmointi */
+  private val programmingArea = new Area("Ohjelmointi", "Alat ohjelmoimaan.")
+  programmingArea.addUsableItem(computerItem)
+  programmingArea.addActivity(programmingComputer)
+
+  /** Muistiinpano */
+  private val noteTakingArea = new Area("Muistiinpanot", "Alat kirjoittamaan muistiinpanoja.")
+  noteTakingArea.addUsableItem(computerItem)
+  noteTakingArea.addActivity(lectureNotebook)
+  noteTakingArea.addActivity(lectureComputer)
+
   /** Restaurant */
   private val restaurantArea = new Area("Ravintola", "Olet ravintolassa, jossa tuoksut leijailevat.")
   restaurantArea.addActivity(lunch)
@@ -47,9 +70,11 @@ class Game {
   private val studyArea = new Area("Opiskelutila", "Olet opiskelutilassa, jossa ajatus lentää ja luovuus on huipussaan.")
   studyArea.addActivity(exercise)
   studyArea.addActivity(programming)
+  studyArea.setSubareas(Vector("laskuharjoitusta" -> exerciseArea, "ohjelmointia" -> programmingArea))
 
   private val lectureHall = new Area("Luentosali", "Olet luentosalissa. Keskity, niin ymmärrät.")
   lectureHall.addActivity(notes)
+  lectureHall.setSubareas(Vector("muistiinpanoja" -> noteTakingArea))
 
   /** Setting neighbours */
   home.setNeighbors(Vector("kouluun" -> metro))
@@ -127,17 +152,15 @@ class Game {
   // Jos aika loppuu kesken, tulee ankara läksytys ja pelaaja "häviää" (joku teksti)
   // Jos pelaaja ehtii tehdä tarvittavat tehtävät ja pääsee metrolle, tulee kehuja ja pelaaja "voittaa"
   def isComplete: Boolean = {
-//    this.player.location == this.destination && this.player.has("remote") && this.player.has("battery")
-    false
+    if (this.player.allTasksDone && this.player.location == home && this.minuteCount <= this.minuteLimit) true else false
   }
 
   /** Determines whether the player has won, lost, or quit, thereby ending the game. */
-  def isOver: Boolean = false
-    //this.isComplete || this.player.hasQuit || this.minuteCount >= this.minuteLimit
+  def isOver: Boolean = this.isComplete || this.player.hasQuit || this.minuteCount >= this.minuteLimit
 
   /** Returns a message that is to be displayed to the player at the beginning of the game. */
   def welcomeMessage: String = {
-    var string = "\nHuh, taas uusi koulupäivä koittaa.\nTee päivän tehtävät to do listasta, niin voit iloisin mielin illalla lopettaa päivän. \n\nTo do:"
+    var string = "\nHuh, taas uusi koulupäivä koittaa.\nTee päivän tehtävät to do listasta ja palaa kotiin kello 16:00 mennessä, niin voit iloisin mielin illalla lopettaa päivän.\n\nTo do:"
     string = string + this.player.handlePrint
     string = string + "\n\n Ennen kuin lähdet kouluun, muista ottaa tietokone ja vihko mukaan, jotta voit tehdä päivän tehtävät!"
     string
@@ -158,13 +181,14 @@ class Game {
   def countHours: String = {
     val hours = this.minuteCount / 60
     val minutes = this.minuteCount % 60
+    var string = ""
+    if (minutes < 10) string = s"\n\nKello on nyt ${8+hours}:0$minutes." else string = s"\n\nKello on nyt ${8+hours}:$minutes."
     if (8 + hours >= 16) {
-      if (minutes < 10) s"\n\nKello on nyt ${8+hours}:0$minutes.\nKoulun tilat ovat sulkeutuneet. Et voi tehdä siellä enää hommia.\nSuuntaa kotia kohti."
-      else s"\n\nKello on nyt ${8+hours}:$minutes.\nKoulun tilat ovat sulkeutuneet. Et voi tehdä siellä enää hommia\nSuuntaa kotia kohti.."
+      string += "\nKoulun tilat ovat sulkeutuneet."
     } else {
-      if (minutes < 10) s"\n\nKello on nyt ${8+hours}:0$minutes.\nKoulun tilat sulkeutuvat kello 16:00."
-      else s"\n\nKello on nyt ${8+hours}:$minutes.\nKoulun tilat sulkeutuvat kello 16:00."
+      string += "\nKoulun tilat sulkeutuvat kello 16:00."
     }
+    string
   }
 
   def closeActivities(): Unit = {

@@ -26,22 +26,50 @@ class Player(startingArea: Area) {
     "juttele" -> "Juttele kavereiden kanssa. Se piristää päivää ja auttaa jaksamaan."
   )
 
+  def allTasksDone: Boolean = doneTasks.size == toDo.size
+
   def doTask(activityName: String): (Int, String) = {
     val activity = this.currentLocation.getActivity(activityName) // wrappaa aktiviteetin optioniin
     if (this.doneTasks.contains(activityName)) { // jos tehtävä on jo tehty
       0 -> s"Sinä olet tehnyt jo $activityName, keskity muihin asioihin."
     } else if (activity.isDefined) { // jos tehtävä on määritelty
-      var time = 0
+      var nextLocation = this.currentLocation
       activityName match {
-        case "ohjelmointia"      => time = programmingTime
-        case "laskuharjoituksia" => time = exerciseTime
-        case "muistiinpanoja"    => time = lectureTime
+        case "ohjelmointia"      => nextLocation = this.currentLocation.subArea("ohjelmointia").getOrElse(this.currentLocation)
+        case "laskuharjoituksia" => nextLocation = this.currentLocation.subArea("laskuharjoitusta").getOrElse(this.currentLocation)
+        case "muistiinpanoja"    => nextLocation = this.currentLocation.subArea("muistiinpanoja").getOrElse(this.currentLocation)
+        case _ => nextLocation = this.currentLocation
       }
-      activity.foreach(_ => this.doneTasks += activityName)
-      time -> s"Teit $activityName. Aikaa kului $time minuuttia."
+      if (nextLocation != this.currentLocation) {
+        nextLocation.setNeighbor("takaisin", this.currentLocation)
+      }
+      this.currentLocation = nextLocation
+      0 -> s"Ryhdyt tekemään $activityName"
     } else {
       0 -> "Tämä toimenpide ei onnistu täällä."
     }
+  }
+
+//  def doTask(activityName: String): (Int, String) = {
+//    val activity = this.currentLocation.getActivity(activityName) // wrappaa aktiviteetin optioniin
+//    if (this.doneTasks.contains(activityName)) { // jos tehtävä on jo tehty
+//      0 -> s"Sinä olet tehnyt jo $activityName, keskity muihin asioihin."
+//    } else if (activity.isDefined) { // jos tehtävä on määritelty
+//      var time = 0
+//      activityName match {
+//        case "ohjelmointia"      => time = programmingTime
+//        case "laskuharjoituksia" => time = exerciseTime
+//        case "muistiinpanoja"    => time = lectureTime
+//      }
+//      activity.foreach(_ => this.doneTasks += activityName)
+//      time -> s"Teit $activityName. Aikaa kului $time minuuttia."
+//    } else {
+//      0 -> "Tämä toimenpide ei onnistu täällä."
+//    }
+//  }
+
+  def useItem(itemName: String): (Int, String) = {
+    0 -> "testi"
   }
 
   def take(itemName: String): (Int, String) = {

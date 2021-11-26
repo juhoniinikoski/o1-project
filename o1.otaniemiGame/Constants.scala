@@ -6,12 +6,11 @@ package object Constants {
 
   val walkingTime = 5
   val lectureTime = 120
-  val exerciseTime = 90
-  val programmingTime = 120
-  val lunchTime = 30
-  val talkingTime = 30
+  val exerciseTime = 60
+  val programmingTime = 60
+  val talkingTime = 15
   val coffeeTime = 5
-  val vegetarianFood = 35
+  val vegetarianFood = 30
   val meatFood = 45
 
 }
