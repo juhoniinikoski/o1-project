@@ -4,11 +4,11 @@ import scala.collection.mutable
 
 /** The class `Area` represents locations in a text adventure game world. A game world
   * consists of areas. In general, an "area" can be pretty much anything: a room, a building,
-  * an acre of forest, or something completely different. What different areas have in
+  * a park, or something completely different. What different areas have in
   * common is that players can be located in them and that they can have exits leading to
-  * other, neighboring areas. An area also has a name and a description.
+  * other, neighboring areas or sub areas (which are within the current area). An area also has a name and a description.
   * @param name         the name of the area
-  * @param description  a basic description of the area (typically not including information about items) */
+  * @param description  a basic description of the area */
 class Area(var name: String, var description: String) {
 
   private val neighbors = mutable.Map[String, Area]()
@@ -17,8 +17,13 @@ class Area(var name: String, var description: String) {
   private var items = mutable.Map[String, Item]()
   private var usableItems = mutable.Map[String, Item]()
 
-  def contains(itemName: String): Boolean = {
-    this.activities.contains(itemName)
+
+  def contains(activityName: String): Boolean = {
+    this.activities.contains(activityName)
+  }
+
+  def addActivity(activity: Item): Unit = {
+    activities += activity.name -> activity
   }
 
   def addItem(item: Item): Unit = {
@@ -29,18 +34,16 @@ class Area(var name: String, var description: String) {
     usableItems += item.name -> item
   }
 
+  def getItem(itemName: String): Option[Item] = this.items.get(itemName)
+
+  def getActivity(activityName: String): Option[Item] = this.activities.get(activityName)
+
   def removeItem(itemName: String): Option[Item] = {
     val item = this.items.get(itemName)
     if (item.isDefined) {
       this.items -= itemName
     }
     item
-  }
-
-  def getItem(itemName: String): Option[Item] = this.items.get(itemName)
-
-  def addActivity(activity: Item): Unit = {
-    activities += activity.name -> activity
   }
 
   def removeActivity(activityName: String): Option[Item] = {
@@ -56,8 +59,6 @@ class Area(var name: String, var description: String) {
     this.items = mutable.Map[String, Item]()
   }
 
-  def getActivity(activityName: String): Option[Item] = this.activities.get(activityName)
-
   /** Returns the area that can be reached from this area by moving in the given direction. The result
     * is returned in an `Option`; `None` is returned if there is no exit in the given direction. */
   def neighbor(direction: String): Option[Area] = this.neighbors.get(direction)
@@ -68,7 +69,6 @@ class Area(var name: String, var description: String) {
   def setNeighbor(direction: String, neighbor: Area): Unit = {
     this.neighbors += direction -> neighbor
   }
-
 
   /** Adds exits from this area to the given areas. Calling this method is equivalent to calling
     * the `setNeighbor` method on each of the given direction--area pairs.
