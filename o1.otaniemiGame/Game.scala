@@ -12,7 +12,7 @@ class Game {
   private val programming = new Item("ohjelmointia", "Tehdä O1 ohjelmoinnin keskeneräisiä tehtäviä.")
   private val restaurant = new Item("ravintola", "Mennä lounaalle täyttämään vatsasi.")
   private val lunch = new Item("lounas", "Syödä ravitsevan opiskelijalounaan. Vaihtoehtoina on joko kasvis- tai liharuokaa.")
-  private val lecture = new Item("luento", "Mennä luennolle kuuntelemaan päivän polttavaa luentoa!")
+  private val lecture = new Item("luento", "Mennä luennolle kuuntelemaan päivän polttavinta luentoa!")
   private val notes = new Item("muistiinpanoja", "Tehdä muistiinpanoja.")
   private val friends = new Item("kaverit", "Jutella kavereiden kanssa kuulumisista.")
   private val coffee = new Item("kahvi", "Ottaa mukaan lounaskahvin.")
@@ -27,7 +27,6 @@ class Game {
   private val coffeeItem = new Item("kahvi", "Kahvi piristämään päivää. Tekeepäs eetvarttia.")
   private val notebookItem = new Item("vihko", "Vihko muistiinpanoja ja laskareita varten.")
   private val computerItem = new Item("tietokone", "Läppäri esimerkiksi koodausta varten.")
-  private val flyerItem = new Item("esite", "Esite, joka kertoo tämän viikon rekrymessujen osallistujayrityksistä.")
 
   /** Areas */
   private val home       = new Area("Koti", "Olet kotona.\nOma koti kullan kallis.")
@@ -108,11 +107,8 @@ class Game {
   aBloc.addActivity(new Item("kahvi", "Ottaa ärrältä kahvin suhteellisen edullisesti mukaan!"))
   aBloc.addItem(coffeeItem)
 
-  dipoli.addActivity(new Item("flyer", "Ottaa mukaan esite koskien Aallon rekrymessuja, jotka järjestetään Otahallissa!"))
   dipoli.addActivity(restaurant)
-  dipoli.addItem(flyerItem)
 
-  kirjasto.addActivity(new Item("book", "Lainata fysiikan kirjan jo ajoissa, tarvitset sitä tenttiviikkoa ajatellen."))
   kirjasto.addActivity(seat)
 
   tTalo.addActivity(lecture)
@@ -147,10 +143,7 @@ class Game {
 
 
 
-  /** Determines if the adventure is complete, that is, if the player has won. */
-  // Päivä päättyy, jos kaikki to do listan tehtävät on tehty ja pelaaja lähtee metrolla kotiin tai jos aika on loppunut
-  // Jos aika loppuu kesken, tulee ankara läksytys ja pelaaja "häviää" (joku teksti)
-  // Jos pelaaja ehtii tehdä tarvittavat tehtävät ja pääsee metrolle, tulee kehuja ja pelaaja "voittaa"
+  /** Determines if the adventure is complete, that is, if the player has won by doing all the given tasks and returning home before time runs out. */
   def isComplete: Boolean = {
     if (this.player.allTasksDone && this.player.location == home && this.minuteCount <= this.minuteLimit) true else false
   }
@@ -171,9 +164,9 @@ class Game {
     * will be different depending on whether or not the player has completed their quest. */
   def goodbyeMessage: String = {
     if (this.isComplete)
-      "Olipahan koulupäivä, mutta hommat on nyt hoidettu! Nyt ei auta kun löhöillä sohvalla."
+      "Olipahan koulupäivä, mutta hommat on nyt hoidettu! Nyt ei auta kuin löhöillä sohvalla."
     else if (this.minuteCount >= this.minuteLimit)
-      "Voi ei, kello on niin paljon, että koulun tilat sulkeutuvat jo.\nHuomiselle jää todella paljon hommaa, harmin paikka!"
+      "Voi ei, kello on niin paljon, että koulun tilat sulkeutuvat jo.\nHuomiselle jää todella paljon hommaa, harmin paikka!\n\nPeli päättyi."
     else  // game over due to player quitting
       "Luovuttajat eivät pärjää tosimaailmassa!!"
   }
@@ -197,7 +190,7 @@ class Game {
   }
 
 
-  /** Plays a turn by executing the given in-game command, such as "go west". Returns a textual
+  /** Plays a turn by executing the given in-game command, such as "kulje etelään". Returns a textual
     * report of what happened, or an error message if the command was unknown. In the latter
     * case, no turns elapse. */
   def playTurn(command: String): String = {
@@ -212,4 +205,3 @@ class Game {
     description.getOrElse("Tuntematon komento: \"" + command + "\".") + this.countHours
   }
 }
-
