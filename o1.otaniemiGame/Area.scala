@@ -15,7 +15,7 @@ class Area(var name: String, var description: String) {
   private val subAreas = mutable.Map[String, Area]()
   private var activities = mutable.Map[String, Item]()
   private var items = mutable.Map[String, Item]()
-  private var usableItems = mutable.Map[String, Item]()
+  private val usableItems = mutable.Map[String, Item]()
 
 
   def contains(activityName: String): Boolean = {
@@ -37,6 +37,8 @@ class Area(var name: String, var description: String) {
   def getItem(itemName: String): Option[Item] = this.items.get(itemName)
 
   def getActivity(activityName: String): Option[Item] = this.activities.get(activityName)
+
+  def getUsableItem(itemName: String): Option[Item] = this.usableItems.get(itemName)
 
   def removeItem(itemName: String): Option[Item] = {
     val item = this.items.get(itemName)

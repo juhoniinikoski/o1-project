@@ -7,7 +7,7 @@ package object Constants {
   val walkingTime = 5
   val lectureTime = 120
   val exerciseTime = 60
-  val programmingTime = 60
+  val programmingTime = 75
   val talkingTime = 15
   val coffeeTime = 5
   val vegetarianFood = 30

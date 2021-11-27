@@ -35,13 +35,7 @@ class Player(startingArea: Area) {
     if (this.doneTasks.contains(activityName)) { // jos tehtävä on jo tehty
       0 -> s"Sinä olet tehnyt jo $activityName, keskity muihin asioihin."
     } else if (activity.isDefined) { // jos tehtävä on määritelty
-      var nextLocation = this.currentLocation
-      activityName match {
-        case "ohjelmointia"      => nextLocation = this.currentLocation.subArea("ohjelmointia").getOrElse(this.currentLocation)
-        case "laskuharjoituksia" => nextLocation = this.currentLocation.subArea("laskuharjoitusta").getOrElse(this.currentLocation)
-        case "muistiinpanoja"    => nextLocation = this.currentLocation.subArea("muistiinpanoja").getOrElse(this.currentLocation)
-        case _                   => nextLocation = this.currentLocation
-      }
+      val nextLocation = this.selectSubArea(activityName)
       if (nextLocation != this.currentLocation) {
         nextLocation.setNeighbor("takaisin", this.currentLocation)
       }
@@ -52,60 +46,33 @@ class Player(startingArea: Area) {
     }
   }
 
-//  def doTask(activityName: String): (Int, String) = {
-//    val activity = this.currentLocation.getActivity(activityName) // wrappaa aktiviteetin optioniin
-//    if (this.doneTasks.contains(activityName)) { // jos tehtävä on jo tehty
-//      0 -> s"Sinä olet tehnyt jo $activityName, keskity muihin asioihin."
-//    } else if (activity.isDefined) { // jos tehtävä on määritelty
-//      var time = 0
-//      activityName match {
-//        case "ohjelmointia"      => time = programmingTime
-//        case "laskuharjoituksia" => time = exerciseTime
-//        case "muistiinpanoja"    => time = lectureTime
-//      }
-//      activity.foreach(_ => this.doneTasks += activityName)
-//      time -> s"Teit $activityName. Aikaa kului $time minuuttia."
-//    } else {
-//      0 -> "Tämä toimenpide ei onnistu täällä."
-//    }
-//  }
+  def selectSubArea(activityName: String): Area = {
+    this.currentLocation.subArea(activityName).getOrElse(this.currentLocation)
+  }
 
   /* Metodin tulisi merkitä parametrina annettu tehtävä valmiiksi to do listaan tai tehtyihin toimintoihin,
   jos tehtävä on määritelty. Palauttaa totuusarvon sen mukaan toimiko tehtävän lisäys. */
-  def markDone(activityName: String): Boolean = {
-    val activity = this.currentLocation.getActivity(activityName.toLowerCase)
-    if (activity.isDefined) {
-      activity.foreach(_ => this.doneTasks += activityName)
-      true
-    } else {
-      false
-    }
+  def markDone(activityName: String): Unit = {
+    this.doneTasks += this.activities(activityName)
   }
 
-  /*
   def useItem(itemName: String): (Int, String) = {
-    var item = ""
-    itemName match {
-      case "vihkoa"       => item = "vihko"
-      case "tietokonetta" => item = "tietokone"
-      case _              => None
-    }
-    if (this.items.contains(item)) {
-      val time = timeForActivity(this.location.name)
-      if (markDone("laskaritietokone")) {
-        time -> s"Teit ${this.activities(this.location.name)} käyttäen ${itemName}.\nAikaa kului ${time} minuuttia."
+    val item = this.currentLocation.getUsableItem(itemName)
+    if (item.isDefined) {
+      val description = item.map(_.description).getOrElse("")
+      val hasItem = this.items.exists(_._1 == description)
+      if (hasItem) {
+        this.markDone(this.currentLocation.name)
+        val time = this.timeForActivity(this.currentLocation.name)
+        this.currentLocation = this.currentLocation.neighbor("takaisin").getOrElse(this.currentLocation)
+        time -> s"Käytit $itemName homman hoitamiseen. Aikaa kului $time minuuttia."
       } else {
-        0 -> s"Yritys tehdä ${this.activities(this.location.name)} epäonnistui. Kokeile uudelleen."
+        0 -> s"Sinulla ei ole mukana $itemName. Käytä toista välinettä tai hae se kotoota."
       }
     } else {
-      if (itemName == "vihkoa" || itemName == "tietokonetta") {
-        0 -> s"Sinulla ei ole ${itemName} mukana. Voit hakea sen kotoa."
-      } else {
-        0 -> s"Et voi käyttää ${itemName}. Valitse vihko tai tietokone."
-      }
+      0 -> s"Et voi käyttää $itemName täällä."
     }
   }
-   */
 
   def take(itemName: String): (Int, String) = {
     val item = this.currentLocation.getItem(itemName)
@@ -205,6 +172,8 @@ class Player(startingArea: Area) {
       if (direction == "kotiin" || direction == "kouluun") {
         string = "Kuljit " + direction + ". Aikaa kului " + 20 + " minuuttia."
         20 -> string
+      } else if (direction == "takaisin") {
+        0 -> "Kuljit takaisin."
       } else {
         string = "Kuljit " + direction + ". Aikaa kului " + 5 + " minuuttia."
         walkingTime -> string

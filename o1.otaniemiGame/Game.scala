@@ -28,6 +28,10 @@ class Game {
   private val notebookItem = new Item("vihko", "Vihko muistiinpanoja ja laskareita varten.")
   private val computerItem = new Item("tietokone", "Läppäri esimerkiksi koodausta varten.")
 
+  /** Usable items */
+  private val usableNotebook = new Item("vihkoa", "vihko")
+  private val usableComputer = new Item("tietokonetta", "tietokone")
+
   /** Areas */
   private val home       = new Area("Koti", "Olet kotona.\nOma koti kullan kallis.")
   private val metro      = new Area("Metro", "Olet metroasemalla.\nMetrot metelöivät ja ihmisiä vilisee.")
@@ -43,19 +47,20 @@ class Game {
 
   /** Laskuharjoitus */
   private val exerciseArea = new Area("Laskuharjoitus", "Alat tekemään laskuharjoitusta.")
-  exerciseArea.addUsableItem(computerItem)
-  exerciseArea.addUsableItem(notebookItem)
+  exerciseArea.addUsableItem(usableComputer)
+  exerciseArea.addUsableItem(usableNotebook)
   exerciseArea.addActivity(exerciseComputer)
   exerciseArea.addActivity(exerciseNoteBook)
 
   /** Ohjelmointi */
   private val programmingArea = new Area("Ohjelmointi", "Alat ohjelmoimaan.")
-  programmingArea.addUsableItem(computerItem)
+  programmingArea.addUsableItem(usableComputer)
   programmingArea.addActivity(programmingComputer)
 
   /** Muistiinpano */
   private val noteTakingArea = new Area("Muistiinpanot", "Alat kirjoittamaan muistiinpanoja.")
-  noteTakingArea.addUsableItem(computerItem)
+  noteTakingArea.addUsableItem(usableComputer)
+  noteTakingArea.addUsableItem(usableNotebook)
   noteTakingArea.addActivity(lectureNotebook)
   noteTakingArea.addActivity(lectureComputer)
 
@@ -69,7 +74,7 @@ class Game {
   private val studyArea = new Area("Opiskelutila", "Olet opiskelutilassa, jossa ajatus lentää ja luovuus on huipussaan.")
   studyArea.addActivity(exercise)
   studyArea.addActivity(programming)
-  studyArea.setSubareas(Vector("laskuharjoitusta" -> exerciseArea, "ohjelmointia" -> programmingArea))
+  studyArea.setSubareas(Vector("laskuharjoituksia" -> exerciseArea, "ohjelmointia" -> programmingArea))
 
   private val lectureHall = new Area("Luentosali", "Olet luentosalissa. Keskity, niin ymmärrät.")
   lectureHall.addActivity(notes)
