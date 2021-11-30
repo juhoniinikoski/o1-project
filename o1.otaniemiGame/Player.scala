@@ -50,8 +50,6 @@ class Player(startingArea: Area) {
     this.currentLocation.subArea(activityName).getOrElse(this.currentLocation)
   }
 
-  /* Metodin tulisi merkitä parametrina annettu tehtävä valmiiksi to do listaan tai tehtyihin toimintoihin,
-  jos tehtävä on määritelty. Palauttaa totuusarvon sen mukaan toimiko tehtävän lisäys. */
   def markDone(activityName: String): Unit = {
     this.doneTasks += this.activities(activityName)
   }

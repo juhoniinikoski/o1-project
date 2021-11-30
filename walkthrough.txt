@@ -1,0 +1,61 @@
+Walkthrough
+
+
+Tekstipeli Otaniemi Game
+
+
+•	Seuraavan läpäisyohjeen vaiheita noudattamalla saat suoritettua Otaniemi Game -pelin onnistuneesti läpi.
+
+
+Selitys pelin vaiheista:
+
+1.	Peli alkaa tervehdystekstillä, jossa pelaaja aloittaa aamunsa kotoaan. Pelaajan ensimmäisenä tehtävänä on kerätä kaikki tarvittavat opiskelutavarat mukaansa. Tämä tapahtuu komennolla ota. Pelaajan tulee kerätä vihko ja tietokone, mikä onnistuu kirjoittamalla komennon perään kyseisen tavaran nimi edellä esitetyssä muodossa. Pelaajan näytölle tulostuu päivän tehtävälista, joka tulee suorittaa aikarajan puitteissa.
+2.	Kun pelaaja on kerännyt kaikki tarvittavat tavarat, tulee hänen lähteä Otaniemeen opiskelemaan. Tämä onnistuu komennolla kulje kouluun.
+3.	Pelaaja on päätynyt metroasemalle. Läpäistääkseen pelin, pelaajan tulee ehtiä takaisin metrolle ajoissa, jotta pelaaja pääsee takaisin kotiin. Ensimmäisenä tehtävänä pelaaja suorittaa aamukahvin mukaanottamisen. Tämä onnistuu menemällä Ablociin komennolla kulje itään (Ablock) ja juomalla kupin kahvia komennolla ota kahvi.
+4.	Nyt pelaajan tulee kulkea aukiolle komennolla kulje etelään (Aukio). Pelaaja haluaa kandidaattikeskukseen kuuntelemaan luentoa ja tekemään luentomuistiinpanot. Tämä onnistuu komennoilla kulje etelään (Kandilafka), mene luennolle, tee muistiinpanoja, käytä vihkoa/tietokonetta.
+5.	Luennon päätyttyä pelaaja haluaa tehdä laskuharjoituksen. Tämä onnistuu menemällä aukion kautta T-talolle opiskelemaan, menemällä T-talon opiskelutilaan ja tekemällä laskuharjoitus. Näiden vaiheiden suorittaminen onnistuu käskyillä kulje pohjoiseen (Aukio), kulje itään (T-talo), mene opiskelemaan (Opiskelutila), tee laskuharjoitus, käytä vihkoa/tietokonetta, kulje takaisin.
+Huom! Opiskelutilasta pääsee vain takaisin opiskelutilan rakennukseen (käskyllä kulje takaisin). Tämä käsky tulee suorittaa, jotta peli voi edetä.
+6.	Kun laskuharjoitus on tehty, on pelaajalla nälkä, joten hän menee Dipoliin (tai johonkin muuhun rakennukseen, jossa on ruokailumahdollisuus) ja syö lounaan. Tämä onnistuu kulkemalla ensin Dipoliin käskyillä kulje länteen (Aukio), kulje länteen (Kirjasto), mene lounaalle (Dipoli). Pelaaja voi syödä käskyllä syö kasvista/lihaa.
+7.	Lounaan jälkeen tehtävälistalta puuttuu enää ohjelmointi. Pelaaja voi suorittaa tämän tehtävän TUAS-talolla (tai jossain muussa opiskeluun tarkoitetussa rakennuksessa) menemällä TUAS-talolle käskyin kulje itään (Kirjasto), kulje itään (Aukio), kulje itään (T-talo), kulje itään (TUAS). Pelaajan tulee taas mennä opiskelutilaan käskyllä mene opiskelemaan (Opiskelutila) ja ohjelmoimalla O1 tehtäviä käskyllä tee ohjelmointia, käytä tietokonetta. Opiskelutilasta tulee muistaa poistua käskyllä kulje takaisin.
+8.	TUAS-talossa pelaaja voi myös jutella kavereille komennolla juttele.
+9.	Pelaaja on suorittanut kaikki vaaditut tehtävälistan tehtävät, joten hän voi suunnatta metroille käskyin kulje länteen (T-talo), kulje länteen (Aukio), kulje pohjoiseen (Abloc), kulje länteen (Metro). Kun pelaaja on päässyt metroasemalle, tulee hänen vielä suorittaa käsky kulje kotiin päättääkseen pelin onnistuneesti.
+
+Eräs tapa pelin suorittamiseen on antaa käskyt:
+
+Ota vihko
+Ota tietokone
+Kulje kouluun (Metroasema)
+Kulje itään (Abloc)
+Ota kahvi
+Kulje etelään (Aukio)
+Kulje etelään (Kandilafka)
+Mene luennolle
+Tee muistiinpanoja
+Käytä vihkoa
+Kulje takaisin
+Kulje pohjoiseen (Aukio)
+Kulje itään (T-talo)
+Mene opiskelemaan (Opiskelutila)
+Tee laskuharjoituksia
+Käytä tietokonetta
+Kulje takaisin
+Kulje länteen (Aukio)
+Kulje länteen (Kirjasto)
+Kulje länteen (Dipoli)
+Mene lounaalle
+Syö lihaa
+Kulje takaisin
+Kulje itään (Kirjasto)
+Kulje itään (Aukio)
+Kulje itään (T-talo)
+Kulje itään (TUAS)
+Mene opiskelemaan (Opiskelutila)
+Tee ohjelmointia
+Käytä tietokonetta
+Kulje takaisin
+Juttele
+Kulje länteen (T-talo)
+Kulje länteen (Aukio)
+Kulje pohjoiseen (Abloc)
+Kulje länteen (Metro)
+Kulje kotiin
